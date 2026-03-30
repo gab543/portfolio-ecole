@@ -1,0 +1,43 @@
+user/admin
+    -email
+    -password
+
+
+projets
+    -id
+    -titre
+    -description 
+    -date de début
+    -date de fin 
+    -labels = []
+    -link
+
+
+images 
+    -id
+    -url
+    -alt
+    -project_id
+    -is_cover
+
+profile
+    -id
+    -email
+    -phone
+    -name
+    -description
+
+skills
+    -id
+    -name
+    -level
+
+socials
+    -id
+    -name
+    -url
+    -icon
+
+categories
+    -id
+    -name
