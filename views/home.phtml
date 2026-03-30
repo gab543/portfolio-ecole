@@ -1,0 +1,58 @@
+<!-- Hero / About Section -->
+<section id="about" class="section-about">
+    <div class="container">
+        <h1>Bonjour, je suis <?= htmlspecialchars($profile->full_name ?? 'Developpeur') ?></h1>
+        <?php if (!empty($profile->description)): ?>
+            <div class="about-description">
+                <?= $profile->description // We might allow safe HTML from WYSIWYG here later ?>
+            </div>
+        <?php endif; ?>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section id="skills" class="section-skills">
+    <div class="container">
+        <h2>Mes Compétences</h2>
+        <div class="skills-grid">
+            <?php foreach ($skills as $skill): ?>
+                <div class="skill-card">
+                    <h3><?= htmlspecialchars($skill->name) ?></h3>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: <?= (int)$skill->level ?>%;"></div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects" class="section-projects">
+    <div class="container">
+        <h2>Mes Projets</h2>
+        
+        <!-- Filter bar -->
+        <div class="project-filters">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <?php foreach ($categories as $cat): ?>
+                <button class="filter-btn" data-filter="<?= $cat->id ?>">
+                    <?= htmlspecialchars($cat->name) ?>
+                </button>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="projects-grid">
+            <?php foreach ($projects as $project): ?>
+                <div class="project-card" data-category="<?= $project->category_id ?>">
+                    <h3><?= htmlspecialchars($project->title) ?></h3>
+                    <p><?= htmlspecialchars(substr($project->description, 0, 100)) ?>...</p>
+                    <a href="/project?id=<?= $project->id ?>" class="btn-read-more">En savoir plus</a>
+                </div>
+            <?php endforeach; ?>
+            <?php if (empty($projects)): ?>
+                <p>Aucun projet à afficher pour le moment.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>

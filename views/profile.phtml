@@ -1,0 +1,71 @@
+<h1>Mon Profil</h1>
+
+<div class="admin-card">
+    <form action="/admin/profile/update" method="POST" id="profile-form">
+        
+        <div class="form-group">
+            <label for="full_name">Nom complet</label>
+            <input type="text" name="full_name" id="full_name" value="<?= htmlspecialchars($profile->full_name ?? '') ?>" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" value="<?= htmlspecialchars($profile->email ?? '') ?>" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone_number">Téléphone</label>
+            <input type="text" name="phone_number" id="phone_number" value="<?= htmlspecialchars($profile->phone_number ?? '') ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description (Bio)</label>
+            <!-- Here goes the Quill editor container -->
+            <div id="editor-container" class="quill-editor-container">
+                <?= $profile->description ?? '' ?>
+            </div>
+            <!-- Hidden input to store Quill HTML content for submission -->
+            <input type="hidden" name="description" id="description">
+        </div>
+
+        <button type="submit" class="btn-primary">Enregistrer</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof Quill !== 'undefined') {
+            console.log('Quill is loaded');
+            var quill = new Quill('#editor-container', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{ 'header': 1 }, { 'header': 2 }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'script': 'sub'}, { 'script': 'super' }],
+                        [{ 'indent': '-1'}, { 'indent': '+1' }],
+                        [{ 'direction': 'rtl' }],
+                        [{ 'size': ['small', false, 'large', 'huge'] }],
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'align': [] }],
+                        ['clean'],
+                        ['link', 'image', 'video']
+                    ]
+                }
+            });
+
+            // On form submit, populate the hidden input with the HTML
+            var form = document.getElementById('profile-form');
+            form.onsubmit = function() {
+                var descriptionInput = document.getElementById('description');
+                // Get the raw HTML content from Quill
+                descriptionInput.value = quill.root.innerHTML;
+            };
+        } else {
+            console.error('Quill is not defined. Ensure library is loaded.');
+        }
+    });
+</script>

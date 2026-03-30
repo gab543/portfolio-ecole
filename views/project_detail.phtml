@@ -1,0 +1,38 @@
+<article class="project-detail-page">
+    <div class="container">
+        <a href="/" class="back-link">&larr; Retour aux projets</a>
+        
+        <header class="project-header">
+            <h1><?= htmlspecialchars($project->title) ?></h1>
+            <?php if ($category): ?>
+                <span class="category-badge"><?= htmlspecialchars($category->name) ?></span>
+            <?php endif; ?>
+            
+            <div class="project-meta">
+                <span>Démaré le: <?= htmlspecialchars($project->start_date) ?></span>
+                <span>Terminé le: <?= htmlspecialchars($project->end_date) ?></span>
+            </div>
+        </header>
+
+        <section class="project-content">
+            <p><?= nl2br(htmlspecialchars($project->description)) ?></p>
+            
+            <?php if (!empty($project->link)): ?>
+                <a href="<?= htmlspecialchars($project->link) ?>" target="_blank" rel="noopener noreferrer" class="btn-primary">Voir le projet en ligne</a>
+            <?php endif; ?>
+        </section>
+
+        <?php if (!empty($images)): ?>
+            <section class="project-gallery">
+                <h2>Galerie</h2>
+                <div class="gallery-grid">
+                    <?php foreach ($images as $img): ?>
+                        <div class="gallery-item">
+                            <img src="<?= htmlspecialchars($img['url']) ?>" alt="<?= htmlspecialchars($img['alt']) ?>">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+        <?php endif; ?>
+    </div>
+</article>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= isset($profile) ? htmlspecialchars($profile->full_name) . ' - Portfolio' : 'Portfolio' ?></title>
+    <!-- We will compile our SCSS in public/assets/css/style.css -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/"><?= isset($profile) ? htmlspecialchars($profile->full_name) : 'Mon Portfolio' ?></a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/#about">À propos</a></li>
+                <li><a href="/#skills">Compétences</a></li>
+                <li><a href="/#projects">Projets</a></li>
+                <li><a href="/admin">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <?= $content ?? '' ?>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; <?= date('Y') ?> <?= isset($profile) ? htmlspecialchars($profile->full_name) : 'Portfolio' ?>. Tous droits réservés.</p>
+    </footer>
+
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
