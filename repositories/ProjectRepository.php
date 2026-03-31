@@ -16,6 +16,8 @@ class ProjectRepository {
 
     public function findAll(): array {
         $stmt = $this->db->query("SELECT * FROM projects");
+        //le FETCH_CLASS permet de return des objets
+        //Project::class est le nom de la classe
         return $stmt->fetchAll(PDO::FETCH_CLASS, Project::class);
     }
 

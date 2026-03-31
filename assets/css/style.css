@@ -1,0 +1,269 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background-color: #f8fafc;
+  color: #0f172a;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Navbar */
+.main-header {
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+.nav-links a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
+}
+.nav-links a:hover {
+  color: #2563eb;
+}
+
+/* Sections */
+section {
+  padding: 4rem 0;
+}
+
+.section-about {
+  text-align: center;
+  background: linear-gradient(135deg, rgb(237.29, 242.35, 247.41) 0%, #f8fafc 100%);
+}
+.section-about h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+.section-about .about-description {
+  font-size: 1.25rem;
+  color: rgb(41.8421052632, 64.1578947368, 117.1578947368);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Projects grid */
+.projects-grid,
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* Mobile First -> Desktop */
+@media (min-width: 768px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .skills-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+/* Cards */
+.project-card,
+.skill-card {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+}
+.project-card:hover,
+.skill-card:hover {
+  transform: translateY(-5px);
+}
+
+.btn-read-more,
+.btn-primary {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #2563eb;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+.btn-read-more:hover,
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.project-filters {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.project-filters .filter-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+}
+.project-filters .filter-btn.active, .project-filters .filter-btn:hover {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+/* =========================================
+   Admin Styles
+   ========================================= */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-sidebar {
+  width: 250px;
+  background: #0f172a;
+  color: white;
+  padding: 2rem 1rem;
+}
+.admin-sidebar h2 {
+  margin-top: 0;
+}
+.admin-sidebar a {
+  color: #cbd5e1;
+  text-decoration: none;
+  display: block;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.admin-sidebar a:hover {
+  background: #1e293b;
+  color: white;
+  border-radius: 4px;
+}
+
+.admin-main {
+  flex: 1;
+  padding: 2rem;
+  background: #f1f5f9;
+}
+
+.flash {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+.flash.success {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+.flash.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* Admin specific components */
+.admin-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.login-wrapper {
+  max-width: 400px;
+  margin: 4rem auto;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.text-error {
+  color: red;
+  margin-bottom: 1rem;
+}
+
+.dashboard-stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.stat-card {
+  flex: 1;
+  text-align: center;
+}
+.stat-card h3 {
+  font-size: 2rem;
+  margin: 0;
+  color: #2563eb;
+}
+.stat-card p {
+  margin: 0;
+  color: #64748b;
+}
+
+.quill-editor-container {
+  height: 200px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: white;
+}
+
+th,
+td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}/*# sourceMappingURL=style.css.map */

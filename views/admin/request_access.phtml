@@ -1,0 +1,45 @@
+<div class="admin-card login-wrapper">
+    <h2>Demande d'accès</h2>
+    
+    <?php 
+        use Services\Session;
+        $error = Session::getFlash('error');
+        $success = Session::getFlash('success');
+    ?>
+
+    <?php if ($error): ?>
+        <div class="text-error" style="margin-bottom: 15px;"><?= htmlspecialchars($error) ?></div>
+    <?php endif; ?>
+    <?php if ($success): ?>
+        <div class="text-success" style="margin-bottom: 15px; color: #4ade80;"><?= htmlspecialchars($success) ?></div>
+    <?php endif; ?>
+
+    <form action="/admin/submit-request" method="POST">
+        
+        <div class="form-group">
+            <label for="email">Email souhaité</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" name="password" id="password" required minlength="6">
+        </div>
+
+        <div class="form-group">
+            <label for="confirm_password">Confirmer le mot de passe</label>
+            <input type="password" name="confirm_password" id="confirm_password" required minlength="6">
+        </div>
+
+        <div class="form-group">
+            <label for="message">Message pour l'administrateur</label>
+            <textarea name="message" id="message" rows="3" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;"></textarea>
+        </div>
+        
+        <button type="submit" class="btn-primary btn-block">Envoyer la demande</button>
+    </form>
+    
+    <div style="margin-top: 15px; text-align: center;">
+        <a href="/admin/login" class="text-white">Retour à la connexion</a>
+    </div>
+</div>

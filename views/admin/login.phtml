@@ -2,8 +2,7 @@
     <h2>Connexion Admin</h2>
     
     <?php 
-        use App\Core\Security;
-        use App\Core\Session;
+        use Services\Session;
         $error = Session::getFlash('error');
     ?>
 
@@ -25,4 +24,8 @@
         
         <button type="submit" class="btn-primary btn-block">Se connecter</button>
     </form>
+    
+    <div style="margin-top: 15px; text-align: center;">
+        <a href="/admin/request-access" class="text-white">Demander un accès admin</a>
+    </div>
 </div>
