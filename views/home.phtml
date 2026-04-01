@@ -44,7 +44,7 @@
 
         <div class="projects-grid">
             <?php foreach ($projects as $project): ?>
-                <div class="project-card" data-category="<?= $project->category_id ?>">
+                <div class="project-card" data-category="<?= $project->id_category ?>">
                     <h3><?= htmlspecialchars($project->title) ?></h3>
                     <p><?= htmlspecialchars(substr($project->description, 0, 100)) ?>...</p>
                     <a href="/project?id=<?= $project->id ?>" class="btn-read-more">En savoir plus</a>

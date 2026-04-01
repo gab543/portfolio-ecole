@@ -10,5 +10,5 @@ class Project {
     public string $end_date = '';
     public string $labels = '';
     public string $link = '';
-    public ?int $category_id = null;
+    public ?int $id_category = null;
 }

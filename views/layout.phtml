@@ -6,6 +6,7 @@
     <title><?= isset($profile) ? htmlspecialchars($profile->full_name) . ' - Portfolio' : 'Portfolio' ?></title>
     <!-- We will compile our SCSS in public/assets/css/style.css -->
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/quill.snow.css">
 </head>
 <body>
 
@@ -31,6 +32,7 @@
         <p>&copy; <?= date('Y') ?> <?= isset($profile) ? htmlspecialchars($profile->full_name) : 'Portfolio' ?>. Tous droits réservés.</p>
     </footer>
 
-    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/main.js" defer></script>
+    <script src="/assets/js/quill.js" defer></script>
 </body>
 </html>

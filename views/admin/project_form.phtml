@@ -1,0 +1,60 @@
+<h1><?= $project ? 'Modifier un projet' : 'Ajouter un projet' ?></h1>
+
+<form method="POST" action="<?= htmlspecialchars($action) ?>">
+    <?php if ($project): ?>
+        <input type="hidden" name="id" value="<?= htmlspecialchars($project->id) ?>">
+    <?php endif; ?>
+
+    <div class="form-group">
+        <label for="title">Titre</label>
+        <input type="text" id="title" name="title" required value="<?= $project ? htmlspecialchars($project->title) : '' ?>">
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description</label>
+        <div id="editor"></div>
+        <textarea name="description" id="description" style="display:none;"><?= $project ? htmlspecialchars($project->description) : '' ?></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="start_date">Date de début</label>
+        <input type="date" id="start_date" name="start_date" required value="<?= $project ? htmlspecialchars($project->start_date) : '' ?>">
+    </div>
+
+    <div class="form-group">
+        <label for="end_date">Date de fin</label>
+        <input type="date" id="end_date" name="end_date" required value="<?= $project ? htmlspecialchars($project->end_date) : '' ?>">
+    </div>
+
+    <div class="form-group">
+        <div class="selected-labels" id="selected-labels"></div>
+        <label for="label-input">Labels / Compétences</label>
+        <input type="hidden" id="labels" name="labels" value="<?= $project ? htmlspecialchars($project->labels) : '' ?>">
+        <input type="text" id="label-input" placeholder="Tapez une compétence et appuyez sur Entrée" autocomplete="off" value="">
+        <div class="suggestions-wrapper" id="suggestions-wrapper" style="display:none;">
+            <div id="skills-suggestions" class="suggestions-list"></div>
+        </div>
+    </div>
+
+    <script>
+        window.ADMIN_SKILLS = <?= json_encode(array_map(function($s) { return $s->name; }, $skills ?? []), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+    </script>
+
+    <div class="form-group">
+        <label for="link">Lien</label>
+        <input type="url" id="link" name="link" value="<?= $project ? htmlspecialchars($project->link) : '' ?>">
+    </div>
+
+    <div class="form-group">
+        <label for="id_category">Catégorie</label>
+        <select id="id_category" name="id_category" required>
+            <option value="">-- Choisissez une catégorie --</option>
+            <?php foreach ($categories as $category): ?>
+                <option value="<?= htmlspecialchars($category->id) ?>" <?= $project && $project->id_category == $category->id ? 'selected' : '' ?>><?= htmlspecialchars($category->name) ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
+    <button class="button" type="submit"><?= $project ? 'Mettre à jour' : 'Créer' ?></button>
+    <a class="button button-secondary" href="/admin/projects">Annuler</a>
+</form>

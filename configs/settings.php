@@ -42,6 +42,12 @@ return [
         '/admin' => ['controller' => 'Controllers\\AdminController', 'action' => 'dashboard'],
         '/admin/profile' => ['controller' => 'Controllers\\AdminController', 'action' => 'profile'],
         '/admin/profile/update' => ['controller' => 'Controllers\\AdminController', 'action' => 'updateProfile'],
+        '/admin/projects' => ['controller' => 'Controllers\\AdminController', 'action' => 'projects'],
+        '/admin/projects/create' => ['controller' => 'Controllers\\AdminController', 'action' => 'createProject'],
+        '/admin/projects/store' => ['controller' => 'Controllers\\AdminController', 'action' => 'storeProject'],
+        '/admin/projects/edit' => ['controller' => 'Controllers\\AdminController', 'action' => 'editProject'],
+        '/admin/projects/update' => ['controller' => 'Controllers\\AdminController', 'action' => 'updateProject'],
+        '/admin/projects/delete' => ['controller' => 'Controllers\\AdminController', 'action' => 'deleteProject'],
         '/admin/request-access' => ['controller' => 'Controllers\\AuthController', 'action' => 'requestAccess'],
         '/admin/submit-request' => ['controller' => 'Controllers\\AuthController', 'action' => 'submitRequest'],
         '/admin/confirm-access' => ['controller' => 'Controllers\\AuthController', 'action' => 'confirmAccess']

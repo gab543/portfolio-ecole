@@ -28,7 +28,7 @@ class ProjectRepository {
         return $stmt->fetch();
     }
 
-    public function getCategory(int $categoryId): ?Category {
+    public function getCategory(?int $categoryId): ?Category {
         if (!$categoryId) return null;
         $stmt = $this->db->prepare("SELECT * FROM categories WHERE id = ?");
         $stmt->setFetchMode(PDO::FETCH_CLASS, Category::class);
@@ -39,8 +39,29 @@ class ProjectRepository {
 
     public function getImages(int $projectId): array {
         if (!$projectId) return [];
-        $stmt = $this->db->prepare("SELECT * FROM images WHERE project_id = ?");
+
+        // La table "images" n'a pas de colonne project_id; la liaison se fait via "project images".
+        $stmt = $this->db->prepare(
+            "SELECT i.* FROM `images` i " .
+            "JOIN `project images` pi ON pi.id_image = i.id " .
+            "WHERE pi.id_project = ?"
+        );
         $stmt->execute([$projectId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function create(string $title, string $description, string $start_date, string $end_date, string $labels, string $link, ?int $categoryId): bool {
+        $stmt = $this->db->prepare("INSERT INTO projects (title, description, start_date, end_date, labels, link, id_category) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        return $stmt->execute([$title, $description, $start_date, $end_date, $labels, $link, $categoryId]);
+    }
+
+    public function update(int $id, string $title, string $description, string $start_date, string $end_date, string $labels, string $link, ?int $categoryId): bool {
+        $stmt = $this->db->prepare("UPDATE projects SET title = ?, description = ?, start_date = ?, end_date = ?, labels = ?, link = ?, id_category = ? WHERE id = ?");
+        return $stmt->execute([$title, $description, $start_date, $end_date, $labels, $link, $categoryId, $id]);
+    }
+
+    public function delete(int $id): bool {
+        $stmt = $this->db->prepare("DELETE FROM projects WHERE id = ?");
+        return $stmt->execute([$id]);
     }
 }

@@ -49,7 +49,7 @@ class FrontController extends Controller {
 
         $this->render('project_detail', [
             'project' => $project,
-            'category' => $projectRepo->getCategory($project->category_id),
+            'category' => $projectRepo->getCategory($project->id_category),
             'images' => $projectRepo->getImages($project->id)
         ]);
     }
