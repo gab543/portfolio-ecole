@@ -1,0 +1,119 @@
+<style>
+  #gravity-box {
+    width: 800px;
+    height: 500px;
+    border: 2px solid #444;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(to top, #111, #222);
+  }
+
+  .word {
+    position: absolute;
+    display: inline-block;
+    padding: 0px;
+    margin: 0;
+    font-size: 4em;    
+    font-weight: bold;
+    color: #0ff;
+    user-select: none;
+    cursor: grab;
+    white-space: nowrap;
+    will-change: transform;
+    transform-origin: center bottom;
+  }
+</style>
+
+<section id="gravity-box"></section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<script>
+const { Engine, World, Bodies, Mouse, MouseConstraint, Runner } = Matter;
+
+const BOX = document.getElementById('gravity-box');
+const W = BOX.clientWidth;
+const H = BOX.clientHeight;
+
+const engine = Engine.create();
+engine.gravity.y = 1;
+const world = engine.world;
+
+// 🔹 Augmentation du sol et des murs
+const FLOOR_HEIGHT = 100; // plus grand pour absorber les mots volumineux
+const WALL_WIDTH = 60;    // plus large pour éviter que les mots passent
+
+// Sol
+World.add(world, Bodies.rectangle(
+  W/2,                // x = centre
+  H + FLOOR_HEIGHT/2, // y = sous le container
+  W,                  // largeur = largeur du container
+  FLOOR_HEIGHT,       // hauteur = grande pour absorber les mots
+  { isStatic: true }
+));
+
+// Murs gauche/droite
+World.add(world, Bodies.rectangle(
+  WALL_WIDTH/2,       // gauche : bord gauche
+  H/2,                // centre vertical
+  WALL_WIDTH,         // largeur plus grande
+  H + 500,            // hauteur augmentée
+  { isStatic: true }
+));
+World.add(world, Bodies.rectangle(
+  W - WALL_WIDTH/2,   // droite : bord droit
+  H/2,
+  WALL_WIDTH,
+  H + 500,
+  { isStatic: true }
+));
+
+// Les mots
+const WORDS = ["Hover", "Me", "animated", "components", "library", "React", "Bits", "interactive", "workflow", "simplify", "your", "development", "designed", "to", "streamline"];
+const bodies = [];
+
+// Crée chaque mot et son corps Matter.js
+WORDS.forEach(text => {
+  const el = document.createElement('div');
+  el.className = 'word';
+  el.textContent = text;
+  BOX.appendChild(el);
+
+  const rect = el.getBoundingClientRect();
+  const body = Bodies.rectangle(
+    Math.random() * (W - rect.width) + rect.width/2,
+    -Math.random() * 300,
+    rect.width,
+    rect.height,
+    {
+      restitution: 0.4,
+      friction: 0.1,
+      frictionAir: 0.02
+    }
+  );
+  body.el = el;
+  World.add(world, body);
+  bodies.push(body);
+});
+
+// Souris pour grab
+const mouse = Mouse.create(BOX);
+const mouseConstraint = MouseConstraint.create(engine, {
+  mouse: mouse,
+  constraint: { stiffness: 0.2, render: { visible: false } }
+});
+World.add(world, mouseConstraint);
+
+// Mise à jour DOM
+(function update() {
+  bodies.forEach(body => {
+    const rect = body.el.getBoundingClientRect();
+    body.el.style.transform = `translate(${body.position.x - rect.width/2}px, ${body.position.y - rect.height/2}px) rotate(${body.angle}rad)`;
+  });
+  requestAnimationFrame(update);
+})();
+
+// Runner
+const runner = Runner.create();
+Runner.run(runner, engine);
+</script>

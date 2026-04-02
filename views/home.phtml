@@ -10,22 +10,9 @@
     </div>
 </section>
 
+
 <!-- Skills Section -->
-<section id="skills" class="section-skills">
-    <div class="container">
-        <h2>Mes Compétences</h2>
-        <div class="skills-grid">
-            <?php foreach ($skills as $skill): ?>
-                <div class="skill-card">
-                    <h3><?= htmlspecialchars($skill->name) ?></h3>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: <?= (int)$skill->level ?>%;"></div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
+<?php require_once __DIR__ . '/skills.phtml'; ?>
 
 <!-- Projects Section -->
 <section id="projects" class="section-projects">
