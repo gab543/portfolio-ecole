@@ -4,7 +4,7 @@
         <h1>Bonjour, je suis <?= htmlspecialchars($profile->full_name ?? 'Developpeur') ?></h1>
         <?php if (!empty($profile->description)): ?>
             <div class="about-description">
-                <?= $profile->description // We might allow safe HTML from WYSIWYG here later ?>
+                <?= $profile->description ?>
             </div>
         <?php endif; ?>
     </div>

@@ -1,35 +1,9 @@
-<style>
-  #gravity-box {
-    width: 800px;
-    height: 500px;
-    border: 2px solid #444;
-    border-radius: 14px;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(to top, #111, #222);
-  }
-
-  .word {
-    position: absolute;
-    display: inline-block;
-    padding: 0px;
-    margin: 0;
-    font-size: 4em;    
-    font-weight: bold;
-    color: #0ff;
-    user-select: none;
-    cursor: grab;
-    white-space: nowrap;
-    will-change: transform;
-    transform-origin: center bottom;
-  }
-</style>
-
-<section id="gravity-box"></section>
+<section id="gravity-box" class="skills-box"></section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+
 <script>
-const { Engine, World, Bodies, Mouse, MouseConstraint, Runner } = Matter;
+const { Engine, World, Bodies, Runner, Mouse, MouseConstraint, Events } = Matter;
 
 const BOX = document.getElementById('gravity-box');
 const W = BOX.clientWidth;
@@ -37,42 +11,40 @@ const H = BOX.clientHeight;
 
 const engine = Engine.create();
 engine.gravity.y = 1;
+
 const world = engine.world;
+const thickness = 100;
 
-// 🔹 Augmentation du sol et des murs
-const FLOOR_HEIGHT = 100; // plus grand pour absorber les mots volumineux
-const WALL_WIDTH = 60;    // plus large pour éviter que les mots passent
+// sol
+World.add(world, Bodies.rectangle(W/2, H + thickness/2, W, thickness, {
+  isStatic: true
+}));
 
-// Sol
-World.add(world, Bodies.rectangle(
-  W/2,                // x = centre
-  H + FLOOR_HEIGHT/2, // y = sous le container
-  W,                  // largeur = largeur du container
-  FLOOR_HEIGHT,       // hauteur = grande pour absorber les mots
-  { isStatic: true }
-));
+// plafond
+World.add(world, Bodies.rectangle(W/2, -H, W, thickness, {
+  isStatic: true
+}));
 
-// Murs gauche/droite
-World.add(world, Bodies.rectangle(
-  WALL_WIDTH/2,       // gauche : bord gauche
-  H/2,                // centre vertical
-  WALL_WIDTH,         // largeur plus grande
-  H + 500,            // hauteur augmentée
-  { isStatic: true }
-));
-World.add(world, Bodies.rectangle(
-  W - WALL_WIDTH/2,   // droite : bord droit
-  H/2,
-  WALL_WIDTH,
-  H + 500,
-  { isStatic: true }
-));
+// murs
+World.add(world, [
+  Bodies.rectangle(-thickness/2, H/2, thickness, H * 5, { isStatic: true }),
+  Bodies.rectangle(W + thickness/2, H/2, thickness, H * 5, { isStatic: true })
+]);
 
-// Les mots
-const WORDS = ["Hover", "Me", "animated", "components", "library", "React", "Bits", "interactive", "workflow", "simplify", "your", "development", "designed", "to", "streamline"];
+<?php
+$skillsArray = [];
+if (isset($profile) && !empty($profile->skills)) {
+    $skillsArray = array_map('trim', explode(',', $profile->skills));
+}
+// Fallback if no skills defined
+if (empty($skillsArray)) {
+    $skillsArray = ["PHP", "HTML / CSS", "SCSS", "JAVASCRIPT", "UI / UX"];
+}
+?>
+// mots
+const WORDS = <?= json_encode($skillsArray) ?>;
 const bodies = [];
 
-// Crée chaque mot et son corps Matter.js
 WORDS.forEach(text => {
   const el = document.createElement('div');
   el.className = 'word';
@@ -80,40 +52,104 @@ WORDS.forEach(text => {
   BOX.appendChild(el);
 
   const rect = el.getBoundingClientRect();
+
   const body = Bodies.rectangle(
     Math.random() * (W - rect.width) + rect.width/2,
-    -Math.random() * 300,
+    -Math.random() * 400,
     rect.width,
     rect.height,
     {
-      restitution: 0.4,
-      friction: 0.1,
-      frictionAir: 0.02
+      restitution: 0.2,
+      friction: 0.8,
+      frictionAir: 0.02,
+      density: 0.002
     }
   );
+
   body.el = el;
   World.add(world, body);
   bodies.push(body);
 });
 
-// Souris pour grab
+// 🖱️ GRAB
 const mouse = Mouse.create(BOX);
+
 const mouseConstraint = MouseConstraint.create(engine, {
-  mouse: mouse,
-  constraint: { stiffness: 0.2, render: { visible: false } }
+  mouse,
+  constraint: {
+    stiffness: 0.2,
+    render: { visible: false }
+  }
 });
+
 World.add(world, mouseConstraint);
 
-// Mise à jour DOM
-(function update() {
-  bodies.forEach(body => {
-    const rect = body.el.getBoundingClientRect();
-    body.el.style.transform = `translate(${body.position.x - rect.width/2}px, ${body.position.y - rect.height/2}px) rotate(${body.angle}rad)`;
-  });
-  requestAnimationFrame(update);
-})();
 
-// Runner
+const circle = document.createElement("div");
+circle.className = "cursor-circle";
+BOX.appendChild(circle);
+
+BOX.addEventListener("mousemove", (e) => {
+  const rect = BOX.getBoundingClientRect();
+  circle.style.left = (e.clientX - rect.left) + "px";
+  circle.style.top = (e.clientY - rect.top) + "px";
+});
+
+BOX.addEventListener("mouseleave", () => {
+  circle.style.opacity = "0";
+  circle.style.transform = "translate(-50%, -50%) scale(0.5)";
+});
+
+BOX.addEventListener("mouseenter", () => {
+  circle.style.opacity = "1";
+  circle.style.transform = "translate(-50%, -50%) scale(1)";
+});
+
+// 🔥 effet scale au grab
+Events.on(mouseConstraint, "startdrag", () => {
+  circle.style.transform = "translate(-50%, -50%) scale(0.7)";
+});
+
+Events.on(mouseConstraint, "enddrag", () => {
+  circle.style.transform = "translate(-50%, -50%) scale(1)";
+});
+
+// 🔄 update DOM
+function update() {
+  bodies.forEach(body => {
+    const el = body.el;
+    const w = el.offsetWidth;
+    const h = el.offsetHeight;
+
+    // Check if body is out of bounds
+    if (
+      body.position.y > H + 150 || 
+      body.position.y < -H - 800 || 
+      body.position.x > W + 150 || 
+      body.position.x < -150
+    ) {
+      // Respawn at the top
+      Matter.Body.setPosition(body, {
+        x: Math.random() * (W - w) + w/2,
+        y: -100 - Math.random() * 200
+      });
+      // Reset velocity
+      Matter.Body.setVelocity(body, { x: 0, y: 0 });
+      Matter.Body.setAngularVelocity(body, 0);
+    }
+
+    el.style.transform = `
+      translate(${body.position.x - w/2}px, ${body.position.y - h/2}px)
+      rotate(${body.angle}rad)
+    `;
+  });
+
+  requestAnimationFrame(update);
+}
+
+update();
+
+// runner
 const runner = Runner.create();
 Runner.run(runner, engine);
 </script>

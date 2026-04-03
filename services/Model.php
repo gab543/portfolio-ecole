@@ -17,7 +17,6 @@ abstract class Model {
      */
     public function findAll(): array {
         $stmt = $this->db->query("SELECT * FROM {$this->table}");
-        // Default fetch mode is ASSOC, we might want objects
         return $stmt->fetchAll(PDO::FETCH_CLASS, static::class);
     }
 

@@ -1,5 +1,13 @@
 <h1>Mon Profil</h1>
 
+<?php
+use Services\Session;
+$success = Session::getFlash('success');
+$error = Session::getFlash('error');
+if ($success) echo '<div class="alert alert-success">' . htmlspecialchars($success) . '</div>';
+if ($error) echo '<div class="alert alert-error">' . htmlspecialchars($error) . '</div>';
+?>
+
 <div class="admin-card">
     <form action="/admin/profile/update" method="POST" id="profile-form">
         
@@ -27,6 +35,20 @@
             <!-- Hidden input to store Quill HTML content for submission -->
             <input type="hidden" name="description" id="description">
         </div>
+
+        <div class="form-group">
+            <div class="selected-labels" id="selected-labels"></div>
+            <label for="label-input">Compétences (Affichées sur le portfolio)</label>
+            <input type="hidden" id="labels" name="labels" value="<?= htmlspecialchars($profile->skills ?? '') ?>">
+            <input type="text" id="label-input" placeholder="Tapez une compétence et appuyez sur Entrée" autocomplete="off" value="">
+            <div class="suggestions-wrapper" id="suggestions-wrapper" style="display:none;">
+                <div id="skills-suggestions" class="suggestions-list"></div>
+            </div>
+        </div>
+
+        <script>
+            window.ADMIN_SKILLS = <?= json_encode(array_map(function($s) { return $s->name; }, $skills ?? []), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+        </script>
 
         <button type="submit" class="btn-primary">Enregistrer</button>
     </form>

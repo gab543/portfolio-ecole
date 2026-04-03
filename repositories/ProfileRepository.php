@@ -20,8 +20,8 @@ class ProfileRepository {
         return $data ?: null;
     }
 
-    public function update(string $fullname, string $email, string $phone, string $description) {
-        $stmt = $this->db->prepare("UPDATE profile SET full_name=?, email=?, phone_number=?, description=?");
-        return $stmt->execute([$fullname, $email, $phone, $description]);
+    public function update(string $fullname, string $email, string $phone, string $description, string $skills) {
+        $stmt = $this->db->prepare("UPDATE profile SET full_name=?, email=?, phone_number=?, description=?, skills=?");
+        return $stmt->execute([$fullname, $email, $phone, $description, $skills]);
     }
 }

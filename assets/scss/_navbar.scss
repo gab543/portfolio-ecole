@@ -1,0 +1,341 @@
+/* 
+   _navbar.scss 
+   Mobile First: Fullscreen Slide-in Menu 
+   Desktop: Bottom Docked Pill Glassmorphism Menu
+*/
+
+$glass-bg: rgba(255, 255, 255, 0.1);
+$glass-border: rgba(255, 255, 255, 0.2);
+$glass-blur: blur(16px);
+$dark-glass-bg: rgba($color-1, 0.95);
+
+/* Body class added by JS to prevent scrolling when mobile menu is open */
+body.no-scroll {
+    overflow: hidden;
+}
+
+.main-header {
+    display: flex;
+    position: fixed;
+    /* Always fixed to track scrolling */
+    width: 100%;
+    z-index: 1000;
+    transition: padding 0.5s ease;
+
+    /* When scrolled, the logo gets centered */
+    &.scrolled {
+        pointer-events: none;
+        /* Let clicks pass except for children that have pointer-events: auto */
+
+        .header-container {
+            pointer-events: none;
+        }
+
+        .logo {
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.1);
+            background: rgba(255, 255, 255, 0.8);
+            /* Glass effect for logo so it's visible over content */
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            pointer-events: auto;
+            /* Logo remains clickable */
+        }
+    }
+}
+
+.header-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    /* Push burger to right */
+    align-items: center;
+    padding: 1.5rem 2rem;
+    position: relative;
+    height: 80px;
+    /* Fixed height to anchor absolute items */
+}
+
+.logo {
+    z-index: 1001;
+    position: absolute;
+    left: 2rem;
+    top: 50%;
+    transform: translate(0, -50%);
+    transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+    border-radius: 50px;
+    background: transparent;
+    padding: 0;
+
+    /* Stay above the mobile menu overlay */
+    a {
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: $text-color;
+        transition: color 0.3s;
+        display: block;
+    }
+
+    a.active {
+        color: white;
+    }
+
+    /* Ensure the logo link is clickable even when main-header has pointer-events: none */
+    pointer-events: auto;
+}
+
+/* 
+   ==============================
+   Mobile Burger Menu Button 
+   ==============================
+*/
+.burger-menu-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 1001;
+    pointer-events: auto;
+    /* Clickable */
+    /* Stay above the mobile menu overlay */
+    padding: 0;
+
+    span {
+        display: block;
+        height: 2px;
+        width: 100%;
+        background-color: $text-color;
+        border-radius: 2px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    &.active {
+        span {
+            /* If the background is dark in open state, make lines white */
+            background-color: white;
+        }
+
+        span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+    }
+}
+
+/* 
+   ==============================
+   Mobile Navbar (Slide-in from Right)
+   ==============================
+*/
+.navbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    background: $dark-glass-bg;
+    backdrop-filter: $glass-blur;
+    -webkit-backdrop-filter: $glass-blur;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: translateX(100%);
+    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+    z-index: 1000;
+
+    &.active {
+        transform: translateX(0);
+
+        /* Trigger cascade animations for links */
+        .nav-links li {
+            animation: slideDownFade 0.5s ease forwards;
+            opacity: 0;
+            /* Start invisible */
+
+            &:nth-child(1) {
+                animation-delay: 0.2s;
+            }
+
+            &:nth-child(2) {
+                animation-delay: 0.3s;
+            }
+
+            &:nth-child(3) {
+                animation-delay: 0.4s;
+            }
+
+            &:nth-child(4) {
+                animation-delay: 0.5s;
+            }
+
+            &:nth-child(5) {
+                animation-delay: 0.6s;
+            }
+        }
+    }
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+
+    li {
+        /* Initial state before animation */
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    a {
+        text-decoration: none;
+        color: white;
+        /* Contrast against dark background */
+        font-weight: 600;
+        font-size: 2rem;
+        /* Large font for mobile "buttons as text" */
+        position: relative;
+        padding: 0.5rem;
+        transition: color 0.3s;
+
+        /* Minimal hover effect */
+        &:hover {
+            color: lighten($primary-color, 20%);
+        }
+    }
+}
+
+@keyframes slideDownFade {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 
+   ==============================
+   Desktop Navbar (Bottom Pill)
+   ==============================
+*/
+@media (min-width: 768px) {
+    .burger-menu-btn {
+        display: none;
+        /* Hide burger on desktop */
+    }
+
+    /* Change logo color back to normal in desktop if needed */
+    .logo a {
+        color: $text-color;
+    }
+
+    .main-header {
+        pointer-events: none;
+        /* Let clicks pass through the header container */
+    }
+
+    .header-container {
+        width: 0;
+        pointer-events: auto;
+
+        .logo {
+            min-width: max-content;
+        }
+    }
+
+    .navbar {
+        pointer-events: auto;
+        /* Re-enable clicks for navbar */
+
+        /* Transition back to regular state without classes */
+        transform: none;
+        transition: none;
+
+        /* Bottom docked Pill styling */
+        position: fixed;
+        top: auto;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+        min-width: 50%;
+        height: auto;
+        padding: 1rem 3rem;
+        border-radius: 50px;
+
+        /* Glassmorphism for premium look */
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        &.active {
+            /* Reset mobile active state logic */
+            transform: translateX(-50%);
+        }
+    }
+
+    .nav-links {
+        flex-direction: row;
+        gap: 3rem;
+
+        li {
+            /* Reset animation logic for desktop */
+            opacity: 1 !important;
+            transform: none !important;
+            animation: none !important;
+        }
+
+        a {
+            font-size: 1rem;
+            color: $text-color;
+            /* Dark text for light pill */
+            font-weight: 500;
+            padding: 0.5rem;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 2px;
+                background-color: $primary-color;
+                transition: width 0.3s ease;
+            }
+
+            &:hover {
+                color: $primary-color;
+
+                &::after {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

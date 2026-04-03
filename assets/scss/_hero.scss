@@ -1,0 +1,17 @@
+.section-about {
+    text-align: center;
+    height: 100vh;
+    background: linear-gradient(135deg, darken($bg-color, 3%) 0%, $bg-color 100%);
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .about-description {
+        font-size: 1.25rem;
+        color: lighten($text-color, 20%);
+        max-width: 800px;
+        margin: 0 auto;
+    }
+}

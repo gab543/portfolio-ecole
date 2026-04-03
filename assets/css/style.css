@@ -5,8 +5,8 @@
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: #fcfaf9;
+  color: #240902;
   line-height: 1.5;
 }
 
@@ -14,60 +14,6 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
-}
-
-/* Navbar */
-.main-header {
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem;
-  margin: 0;
-  padding: 0;
-}
-.nav-links a {
-  text-decoration: none;
-  color: inherit;
-  font-weight: 500;
-}
-.nav-links a:hover {
-  color: #2563eb;
-}
-
-/* Sections */
-section {
-  padding: 4rem 0;
-}
-
-.section-about {
-  text-align: center;
-  background: linear-gradient(135deg, rgb(237.29, 242.35, 247.41) 0%, #f8fafc 100%);
-}
-.section-about h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-.section-about .about-description {
-  font-size: 1.25rem;
-  color: rgb(41.8421052632, 64.1578947368, 117.1578947368);
-  max-width: 800px;
-  margin: 0 auto;
 }
 
 /* Projects grid */
@@ -111,7 +57,7 @@ section {
 .btn-primary {
   display: inline-block;
   padding: 0.5rem 1rem;
-  background: #2563eb;
+  background: #A92831;
   color: white;
   text-decoration: none;
   border-radius: 4px;
@@ -119,7 +65,7 @@ section {
 }
 .btn-read-more:hover,
 .btn-primary:hover {
-  background: #1d4ed8;
+  background: #7D0E13;
 }
 
 .project-filters {
@@ -136,9 +82,9 @@ section {
   cursor: pointer;
 }
 .project-filters .filter-btn.active, .project-filters .filter-btn:hover {
-  background: #2563eb;
+  background: #A92831;
   color: white;
-  border-color: #2563eb;
+  border-color: #A92831;
 }
 
 /* =========================================
@@ -151,7 +97,7 @@ section {
 
 .admin-sidebar {
   width: 250px;
-  background: #0f172a;
+  background: #37040E;
   color: white;
   padding: 2rem 1rem;
 }
@@ -159,14 +105,14 @@ section {
   margin-top: 0;
 }
 .admin-sidebar a {
-  color: #cbd5e1;
+  color: #e2dcdb;
   text-decoration: none;
   display: block;
   padding: 0.5rem;
   margin-bottom: 0.5rem;
 }
 .admin-sidebar a:hover {
-  background: #1e293b;
+  background: #620D14;
   color: white;
   border-radius: 4px;
 }
@@ -228,7 +174,7 @@ section {
 .stat-card h3 {
   font-size: 2rem;
   margin: 0;
-  color: #2563eb;
+  color: #A92831;
 }
 .stat-card p {
   margin: 0;
@@ -271,4 +217,413 @@ td {
 .main-content {
   width: 80%;
   margin: 0 auto;
+}
+
+#gravity-box {
+  padding: 0;
+  width: 100%;
+  height: 50vh;
+  border: 2px solid #444;
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(to top, #111, #222);
+  cursor: none;
+}
+
+.word {
+  position: absolute;
+  font-size: 2em;
+  font-weight: bold;
+  color: white;
+  user-select: none;
+  cursor: none;
+  white-space: nowrap;
+  will-change: transform;
+  transform-origin: center;
+}
+
+.cursor-circle {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border: 4px solid #A92831;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease;
+  z-index: 10;
+  opacity: 0;
+  transition: transform 0.1s ease, opacity 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .word {
+    font-size: 4em;
+  }
+}
+/* 
+   _navbar.scss 
+   Mobile First: Fullscreen Slide-in Menu 
+   Desktop: Bottom Docked Pill Glassmorphism Menu
+*/
+/* Body class added by JS to prevent scrolling when mobile menu is open */
+body.no-scroll {
+  overflow: hidden;
+}
+
+.main-header {
+  display: flex;
+  position: fixed;
+  /* Always fixed to track scrolling */
+  width: 100%;
+  z-index: 1000;
+  transition: padding 0.5s ease;
+  /* When scrolled, the logo gets centered */
+}
+.main-header.scrolled {
+  pointer-events: none;
+  /* Let clicks pass except for children that have pointer-events: auto */
+}
+.main-header.scrolled .header-container {
+  pointer-events: none;
+}
+.main-header.scrolled .logo {
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.1);
+  background: rgba(255, 255, 255, 0.8);
+  /* Glass effect for logo so it's visible over content */
+  backdrop-filter: blur(10px);
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  pointer-events: auto;
+  /* Logo remains clickable */
+}
+
+.header-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  /* Push burger to right */
+  align-items: center;
+  padding: 1.5rem 2rem;
+  position: relative;
+  height: 80px;
+  /* Fixed height to anchor absolute items */
+}
+
+.logo {
+  z-index: 1001;
+  position: absolute;
+  left: 2rem;
+  top: 50%;
+  transform: translate(0, -50%);
+  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+  border-radius: 50px;
+  background: transparent;
+  padding: 0;
+  /* Stay above the mobile menu overlay */
+}
+.logo a {
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #240902;
+  transition: color 0.3s;
+  display: block;
+}
+.logo a.active {
+  color: white;
+}
+.logo {
+  /* Ensure the logo link is clickable even when main-header has pointer-events: none */
+  pointer-events: auto;
+}
+
+/* 
+   ==============================
+   Mobile Burger Menu Button 
+   ==============================
+*/
+.burger-menu-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+  pointer-events: auto;
+  /* Clickable */
+  /* Stay above the mobile menu overlay */
+  padding: 0;
+}
+.burger-menu-btn span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background-color: #240902;
+  border-radius: 2px;
+  transition: all 0.3s ease-in-out;
+}
+.burger-menu-btn.active span {
+  /* If the background is dark in open state, make lines white */
+  background-color: white;
+}
+.burger-menu-btn.active span:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+.burger-menu-btn.active span:nth-child(2) {
+  opacity: 0;
+  transform: translateX(20px);
+}
+.burger-menu-btn.active span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* 
+   ==============================
+   Mobile Navbar (Slide-in from Right)
+   ==============================
+*/
+.navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(36, 9, 2, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transform: translateX(100%);
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+  z-index: 1000;
+}
+.navbar.active {
+  transform: translateX(0);
+  /* Trigger cascade animations for links */
+}
+.navbar.active .nav-links li {
+  animation: slideDownFade 0.5s ease forwards;
+  opacity: 0;
+  /* Start invisible */
+}
+.navbar.active .nav-links li:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.navbar.active .nav-links li:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.navbar.active .nav-links li:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.navbar.active .nav-links li:nth-child(4) {
+  animation-delay: 0.5s;
+}
+.navbar.active .nav-links li:nth-child(5) {
+  animation-delay: 0.6s;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+.nav-links li {
+  /* Initial state before animation */
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  /* Contrast against dark background */
+  font-weight: 600;
+  font-size: 2rem;
+  /* Large font for mobile "buttons as text" */
+  position: relative;
+  padding: 0.5rem;
+  transition: color 0.3s;
+  /* Minimal hover effect */
+}
+.nav-links a:hover {
+  color: rgb(216.9138755981, 94.0861244019, 102.6555023923);
+}
+
+@keyframes slideDownFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* 
+   ==============================
+   Desktop Navbar (Bottom Pill)
+   ==============================
+*/
+@media (min-width: 768px) {
+  .burger-menu-btn {
+    display: none;
+    /* Hide burger on desktop */
+  }
+  /* Change logo color back to normal in desktop if needed */
+  .logo a {
+    color: #240902;
+  }
+  .main-header {
+    pointer-events: none;
+    /* Let clicks pass through the header container */
+  }
+  .header-container {
+    width: 0;
+    pointer-events: auto;
+  }
+  .header-container .logo {
+    min-width: max-content;
+  }
+  .navbar {
+    pointer-events: auto;
+    /* Re-enable clicks for navbar */
+    /* Transition back to regular state without classes */
+    transform: none;
+    transition: none;
+    /* Bottom docked Pill styling */
+    position: fixed;
+    top: auto;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    min-width: 50%;
+    height: auto;
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    /* Glassmorphism for premium look */
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .navbar.active {
+    /* Reset mobile active state logic */
+    transform: translateX(-50%);
+  }
+  .nav-links {
+    flex-direction: row;
+    gap: 3rem;
+  }
+  .nav-links li {
+    /* Reset animation logic for desktop */
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .nav-links a {
+    font-size: 1rem;
+    color: #240902;
+    /* Dark text for light pill */
+    font-weight: 500;
+    padding: 0.5rem;
+  }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: #A92831;
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover {
+    color: #A92831;
+  }
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+}
+.section-about {
+  text-align: center;
+  height: 100vh;
+  background: linear-gradient(135deg, rgb(246.9, 241.5, 238.8) 0%, #fcfaf9 100%);
+}
+.section-about h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+.section-about .about-description {
+  font-size: 1.25rem;
+  color: rgb(132.6315789474, 33.1578947368, 7.3684210526);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.suggestions-wrapper {
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+}
+
+.suggestion-item {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s;
+}
+.suggestion-item:hover {
+  background: #f0f0f0;
+}
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+/* Flash Alerts */
+.alert {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.alert-success {
+  background-color: rgba(30, 200, 100, 0.1);
+  color: #0f5132;
+  border: 1px solid rgba(30, 200, 100, 0.3);
+}
+
+.alert-error {
+  background-color: rgba(36, 9, 2, 0.1);
+  color: #240902;
+  border: 1px solid rgba(36, 9, 2, 0.3);
 }/*# sourceMappingURL=style.css.map */

@@ -1,5 +1,13 @@
 <h1><?= $project ? 'Modifier un projet' : 'Ajouter un projet' ?></h1>
 
+<?php
+use Services\Session;
+$success = Session::getFlash('success');
+$error = Session::getFlash('error');
+if ($success) echo '<div class="alert alert-success">' . htmlspecialchars($success) . '</div>';
+if ($error) echo '<div class="alert alert-error">' . htmlspecialchars($error) . '</div>';
+?>
+
 <form method="POST" action="<?= htmlspecialchars($action) ?>">
     <?php if ($project): ?>
         <input type="hidden" name="id" value="<?= htmlspecialchars($project->id) ?>">

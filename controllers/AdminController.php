@@ -35,7 +35,14 @@ class AdminController extends Controller {
     public function profile() {
         $profileRepo = new ProfileRepository();
         $profile = $profileRepo->getFirst();
-        $this->render('admin/profile', ['profile' => $profile]);
+
+        $skillRepo = new SkillRepository();
+        $skills = $skillRepo->findAll();
+
+        $this->render('admin/profile', [
+            'profile' => $profile,
+            'skills' => $skills
+        ]);
     }
 
     public function projects() {
@@ -135,15 +142,32 @@ class AdminController extends Controller {
 
     public function updateProfile() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $description = $_POST['description'] ?? '';
-            $fullname = $_POST['full_name'] ?? '';
-            $email = $_POST['email'] ?? '';
-            $phone = $_POST['phone_number'] ?? '';
+            $description = trim($_POST['description'] ?? '');
+            $fullname = trim($_POST['full_name'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $phone = trim($_POST['phone_number'] ?? '');
+            $skills = $_POST['labels'] ?? ''; // Matches the hidden input from adminLabels.js
 
-            $profileRepo = new ProfileRepository();
-            $profileRepo->update($fullname, $email, $phone, $description);
+            // Error Management / Validation
+            if (empty($fullname) || empty($email)) {
+                Session::setFlash('error', 'Le nom et l\'email sont obligatoires.');
+                $this->redirect('/admin/profile');
+                return;
+            }
 
-            Session::setFlash('success', 'Profil mis à jour avec succès.');
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                Session::setFlash('error', 'Le format de l\'adresse email est invalide.');
+                $this->redirect('/admin/profile');
+                return;
+            }
+
+            try {
+                $profileRepo = new ProfileRepository();
+                $profileRepo->update($fullname, $email, $phone, $description, $skills);
+                Session::setFlash('success', 'Profil mis à jour avec succès.');
+            } catch (\Exception $e) {
+                Session::setFlash('error', 'Erreur lors de la sauvegarde : ' . $e->getMessage());
+            }
         }
         $this->redirect('/admin/profile');
     }
