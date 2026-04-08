@@ -993,4 +993,179 @@ body.no-scroll {
   border-bottom: none;
 }
 
+.project-detail-page {
+  padding: 3rem 0;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.project-detail-page .back-link {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  color: #A92831;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+.project-detail-page .back-link:hover {
+  color: #7D0E13;
+  text-decoration: underline;
+}
+.project-detail-page .project-header {
+  margin-bottom: 2rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 1.5rem;
+}
+.project-detail-page .project-header h1 {
+  font-family: "Passero One", cursive;
+  font-size: 3rem;
+  color: #240902;
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+.project-detail-page .project-header .category-badge {
+  background: #A92831;
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(169, 40, 49, 0.3);
+}
+.project-detail-page .project-header .project-meta {
+  display: flex;
+  gap: 1.5rem;
+  color: rgb(132.6315789474, 33.1578947368, 7.3684210526);
+  font-size: 0.95rem;
+  background: rgba(0, 0, 0, 0.02);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+}
+.project-detail-page .project-content {
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  margin-bottom: 3rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+.project-detail-page .project-content .formatted-content * {
+  color: #240902 !important;
+}
+.project-detail-page .project-content .formatted-content p {
+  margin-bottom: 1rem;
+}
+.project-detail-page .project-content .formatted-content h1, .project-detail-page .project-content .formatted-content h2, .project-detail-page .project-content .formatted-content h3 {
+  color: #A92831 !important;
+  margin-top: 1.5rem;
+}
+.project-detail-page .project-content .formatted-content ul, .project-detail-page .project-content .formatted-content ol {
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+}
+.project-detail-page .project-content .btn-primary {
+  margin-top: 2.5rem;
+  display: inline-block;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+}
+.project-detail-page .project-gallery h2 {
+  font-family: "Passero One", cursive;
+  color: #240902;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+.project-detail-page .project-gallery .gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+.project-detail-page .project-gallery .gallery-grid .gallery-item {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  aspect-ratio: 4/3;
+  background: #f8f9fa;
+}
+.project-detail-page .project-gallery .gallery-grid .gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.project-detail-page .project-gallery .gallery-grid .gallery-item img:hover {
+  transform: scale(1.08);
+}
+
+.not-found {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  animation: fadeIn 0.8s ease-out forwards;
+}
+.not-found h1 {
+  font-family: "Passero One", cursive;
+  font-size: 8rem;
+  margin: 0;
+  color: #A92831;
+  text-shadow: 4px 4px 0px rgba(36, 9, 2, 0.1);
+  line-height: 1;
+  letter-spacing: 5px;
+  position: relative;
+}
+.not-found h1::after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: #240902;
+  border-radius: 2px;
+}
+.not-found p {
+  font-size: 1.5rem;
+  color: rgb(108.4736842105, 27.1184210526, 6.0263157895);
+  margin-top: 3rem;
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  line-height: 1.6;
+}
+.not-found .btn-primary {
+  font-size: 1.2rem;
+  padding: 0.8rem 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(169, 40, 49, 0.3);
+  transition: all 0.3s ease;
+}
+.not-found .btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(169, 40, 49, 0.4);
+  background: #7D0E13;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /*# sourceMappingURL=style.css.map */

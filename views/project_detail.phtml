@@ -15,7 +15,9 @@
         </header>
 
         <section class="project-content">
-            <p><?= nl2br(htmlspecialchars($project->description)) ?></p>
+            <div class="formatted-content">
+                <?= $project->description ?>
+            </div>
             
             <?php if (!empty($project->link)): ?>
                 <a href="<?= htmlspecialchars($project->link) ?>" target="_blank" rel="noopener noreferrer" class="btn-primary">Voir le projet en ligne</a>
@@ -28,7 +30,7 @@
                 <div class="gallery-grid">
                     <?php foreach ($images as $img): ?>
                         <div class="gallery-item">
-                            <img src="<?= htmlspecialchars($img['url']) ?>" alt="<?= htmlspecialchars($img['alt']) ?>">
+                            <img src="/upload/<?= htmlspecialchars($img['url']) ?>" alt="<?= htmlspecialchars($img['alt']) ?>">
                         </div>
                     <?php endforeach; ?>
                 </div>

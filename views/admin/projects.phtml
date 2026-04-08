@@ -17,21 +17,23 @@
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($projects as $project): ?>
-            <tr>
-                <td><?= htmlspecialchars($project->id) ?></td>
-                <td><?= htmlspecialchars($project->title) ?></td>
-                <td><?= htmlspecialchars($project->id_category ?? 'N/A') ?></td>
-                <td><?= htmlspecialchars($project->start_date) ?> → <?= htmlspecialchars($project->end_date) ?></td>
-                <td>
-                    <a class="button button-small" href="/admin/projects/edit?id=<?= urlencode($project->id) ?>">Modifier</a>
-                    <form method="POST" action="/admin/projects/delete" style="display:inline;" onsubmit="return confirm('Supprimer ce projet ?');">
-                        <input type="hidden" name="id" value="<?= htmlspecialchars($project->id) ?>">
-                        <button class="button button-small button-danger" type="submit">Supprimer</button>
-                    </form>
-                </td>
-            </tr>
-        <?php endforeach; ?>
+            <?php foreach ($projects as $project): ?>
+                <tr>
+                    <td><?= htmlspecialchars($project->id) ?></td>
+                    <td><?= htmlspecialchars($project->title) ?></td>
+                    <td><?= htmlspecialchars($project->id_category ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($project->start_date) ?> → <?= htmlspecialchars($project->end_date) ?></td>
+                    <td>
+                        <a class="button button-small"
+                            href="/admin/projects/edit?id=<?= urlencode($project->id) ?>">Modifier</a>
+                        <form method="POST" action="/admin/projects/delete" style="display:inline;"
+                            onsubmit="return confirm('Supprimer ce projet ?');">
+                            <input type="hidden" name="id" value="<?= htmlspecialchars($project->id) ?>">
+                            <button class="button button-small button-danger" type="submit">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
 <?php else: ?>
