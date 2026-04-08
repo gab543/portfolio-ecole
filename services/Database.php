@@ -33,6 +33,10 @@ class Database
                 PDO::ATTR_EMULATE_PREPARES => false,
             ];
 
+            if ($driver !== 'pgsql') {
+                $options[PDO::MYSQL_ATTR_INIT_COMMAND] = "SET sql_mode=(SELECT CONCAT(@@sql_mode, ',ANSI_QUOTES'))";
+            }
+
             try {
                 self::$instance = new PDO($dsn, $user, $pass, $options);
             } catch (PDOException $e) {
