@@ -6,36 +6,38 @@
 <p><a class="button" href="/admin/projects/create">Ajouter un projet</a></p>
 
 <?php if (!empty($projects)): ?>
-    <table class="admin-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Titre</th>
-                <th>Catégorie</th>
-                <th>Dates</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($projects as $project): ?>
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
                 <tr>
-                    <td><?= htmlspecialchars($project->id) ?></td>
-                    <td><?= htmlspecialchars($project->title) ?></td>
-                    <td><?= htmlspecialchars($project->id_category ?? 'N/A') ?></td>
-                    <td><?= htmlspecialchars($project->start_date) ?> → <?= htmlspecialchars($project->end_date) ?></td>
-                    <td>
-                        <a class="button button-small"
-                            href="/admin/projects/edit?id=<?= urlencode($project->id) ?>">Modifier</a>
-                        <form method="POST" action="/admin/projects/delete" style="display:inline;"
-                            onsubmit="return confirm('Supprimer ce projet ?');">
-                            <input type="hidden" name="id" value="<?= htmlspecialchars($project->id) ?>">
-                            <button class="button button-small button-danger" type="submit">Supprimer</button>
-                        </form>
-                    </td>
+                    <th>ID</th>
+                    <th>Titre</th>
+                    <th>Catégorie</th>
+                    <th>Dates</th>
+                    <th>Actions</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($projects as $project): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($project->id) ?></td>
+                        <td><?= htmlspecialchars($project->title) ?></td>
+                        <td><?= htmlspecialchars($project->id_category ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($project->start_date) ?> → <?= htmlspecialchars($project->end_date) ?></td>
+                        <td>
+                            <a class="button button-small"
+                                href="/admin/projects/edit?id=<?= urlencode($project->id) ?>">Modifier</a>
+                            <form method="POST" action="/admin/projects/delete" style="display:inline;"
+                                onsubmit="return confirm('Supprimer ce projet ?');">
+                                <input type="hidden" name="id" value="<?= htmlspecialchars($project->id) ?>">
+                                <button class="button button-small button-danger" type="submit">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 <?php else: ?>
     <p>Aucun projet trouvé.</p>
 <?php endif; ?>
