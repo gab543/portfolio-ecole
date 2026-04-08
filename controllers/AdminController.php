@@ -158,7 +158,7 @@ class AdminController extends Controller {
                         $tmpName = $_FILES['new_files']['tmp_name'][$index];
                         $name = basename($_FILES['new_files']['name'][$index]);
                         $targetName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $name);
-                        $uploadDir = __DIR__ . '/../public/upload/';
+                        $uploadDir = __DIR__ . '/../upload/';
                         
                         if (!is_dir($uploadDir)) {
                             mkdir($uploadDir, 0777, true);
@@ -184,7 +184,7 @@ class AdminController extends Controller {
                 if ($_FILES['image']['error'][$idx] === UPLOAD_ERR_OK) {
                     $tmpName = $_FILES['image']['tmp_name'][$idx];
                     $targetName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', basename($name));
-                    $uploadDir = __DIR__ . '/../public/upload/';
+                    $uploadDir = __DIR__ . '/../upload/';
                     
                     if (!is_dir($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
