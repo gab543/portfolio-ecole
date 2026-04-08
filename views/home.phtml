@@ -1,9 +1,27 @@
-<section id="hero" class="section-hero">
-    <div class="container">
-        <div class="hero-content">
-
-        </div>
+<!-- Hero / About Section -->
+<section id="about" class="section-hero">
+    <div class="hero-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
     </div>
+
+    <div class="container hero-container">
+        <div class="hero-content">
+            <span class="hero-greeting">Bienvenue dans mon univers</span>
+            <h1 class="hero-title">Je suis <span
+                    class="name-highlight"><?= htmlspecialchars($profile->full_name) ?></span></h1>
+
+            <?php if (!empty($profile->description)): ?>
+                <div class="hero-description">
+                    <?= $profile->description ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="hero-actions">
+                <a href="#projects" class="btn-primary hero-btn">Voir mes projets</a>
+                <a href="#skills" class="btn-outline hero-btn">Mes compétences</a>
+            </div>
 </section>
 
 
@@ -24,7 +42,6 @@
         <?php endif; ?>
     </div>
 </section>
-
 
 <!-- Skills Section -->
 <?php require_once __DIR__ . '/skills.phtml'; ?>
