@@ -15,7 +15,12 @@ class ProjectRepository {
     }
 
     public function findAll(): array {
-        $stmt = $this->db->query("SELECT * FROM projects");
+        $stmt = $this->db->query("
+            SELECT p.*,
+                   (SELECT i.url FROM `project images` pi JOIN `images` i ON pi.id_image = i.id WHERE pi.id_project = p.id ORDER BY i.is_cover DESC LIMIT 1) as image_url,
+                   (SELECT i.alt FROM `project images` pi JOIN `images` i ON pi.id_image = i.id WHERE pi.id_project = p.id ORDER BY i.is_cover DESC LIMIT 1) as image_alt
+            FROM projects p
+        ");
         //le FETCH_CLASS permet de return des objets
         //Project::class est le nom de la classe
         return $stmt->fetchAll(PDO::FETCH_CLASS, Project::class);

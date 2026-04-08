@@ -11,4 +11,6 @@ class Project {
     public string $labels = '';
     public string $link = '';
     public ?int $id_category = null;
+    public ?string $image_url = null;
+    public ?string $image_alt = null;
 }

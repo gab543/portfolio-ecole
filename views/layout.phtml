@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($profile) ? htmlspecialchars($profile->full_name) . ' - Portfolio' : 'Portfolio' ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Passero+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/quill.snow.css">
     <script src="/assets/js/scrollreveal.js" defer></script>
 </head>
+
 <body>
 
     <header class="main-header">
@@ -15,13 +20,13 @@
             <div class="logo">
                 <a href="/"><?= isset($profile) ? htmlspecialchars($profile->full_name) : 'Mon Portfolio' ?></a>
             </div>
-            
+
             <button class="burger-menu-btn" aria-label="Toggle menu">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
-            
+
             <nav class="navbar">
                 <ul class="nav-links">
                     <li><a href="/#about">À propos</a></li>
@@ -38,10 +43,12 @@
     </main>
 
     <footer class="main-footer">
-        <p>&copy; <?= date('Y') ?> <?= isset($profile) ? htmlspecialchars($profile->full_name) : 'Portfolio' ?>. Tous droits réservés.</p>
+        <p>&copy; <?= date('Y') ?> <?= isset($profile) ? htmlspecialchars($profile->full_name) : 'Portfolio' ?>. Tous
+            droits réservés.</p>
     </footer>
 
     <script type="module" src="/assets/js/main.js" defer></script>
     <script src="/assets/js/quill.js" defer></script>
 </body>
+
 </html>

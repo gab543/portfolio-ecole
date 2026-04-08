@@ -5,7 +5,7 @@
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
-  background-color: #fcfaf9;
+  background-color: #636363;
   color: #240902;
   line-height: 1.5;
 }
@@ -236,7 +236,9 @@ td {
   font-size: 2em;
   font-weight: bold;
   color: white;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   cursor: none;
   white-space: nowrap;
   will-change: transform;
@@ -273,6 +275,7 @@ body.no-scroll {
 }
 
 .main-header {
+  top: 0;
   display: flex;
   position: fixed;
   /* Always fixed to track scrolling */
@@ -286,6 +289,7 @@ body.no-scroll {
   /* Let clicks pass except for children that have pointer-events: auto */
 }
 .main-header.scrolled .header-container {
+  width: 100%;
   pointer-events: none;
 }
 .main-header.scrolled .logo {
@@ -299,6 +303,9 @@ body.no-scroll {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   pointer-events: auto;
   /* Logo remains clickable */
+}
+.main-header.scrolled .logo a.active {
+  color: black;
 }
 
 .header-container {
@@ -326,8 +333,11 @@ body.no-scroll {
   /* Stay above the mobile menu overlay */
 }
 .logo a {
+  font-family: "Passero One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  text-wrap: nowrap;
   text-decoration: none;
-  font-weight: 700;
   font-size: 1.5rem;
   color: #240902;
   transition: color 0.3s;
@@ -486,10 +496,11 @@ body.no-scroll {
     /* Let clicks pass through the header container */
   }
   .header-container {
-    width: 0;
     pointer-events: auto;
+    width: 100% !important;
   }
   .header-container .logo {
+    min-width: -moz-max-content;
     min-width: max-content;
   }
   .navbar {
@@ -504,6 +515,7 @@ body.no-scroll {
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
+    width: -moz-max-content;
     width: max-content;
     min-width: 50%;
     height: auto;
@@ -560,13 +572,24 @@ body.no-scroll {
   }
 }
 .section-about {
+  margin-top: 80px;
   text-align: center;
   height: 100vh;
-  background: linear-gradient(135deg, rgb(246.9, 241.5, 238.8) 0%, #fcfaf9 100%);
+  background: linear-gradient(135deg, rgb(91.35, 91.35, 91.35) 0%, #636363 100%);
+}
+.section-about .profile-image img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
 }
 .section-about h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+}
+.section-about h1 .name {
+  font-family: "Passero One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 .section-about .about-description {
   font-size: 1.25rem;

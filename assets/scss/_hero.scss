@@ -1,11 +1,26 @@
 .section-about {
+    margin-top: 80px;
     text-align: center;
     height: 100vh;
     background: linear-gradient(135deg, darken($bg-color, 3%) 0%, $bg-color 100%);
 
+    .profile-image {
+        img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+        }
+    }
+
     h1 {
         font-size: 2.5rem;
         margin-bottom: 1rem;
+
+        .name {
+            font-family: "Passero One", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
     }
 
     .about-description {

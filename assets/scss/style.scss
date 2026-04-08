@@ -6,7 +6,7 @@ $color-5: #A92831;
 
 $primary-color: $color-5;
 $primary-hover: $color-4;
-$bg-color: #fcfaf9;
+$bg-color: #636363;
 $text-color: $color-1;
 $card-bg: #ffffff;
 
@@ -261,11 +261,13 @@ td {
     border-radius: 8px;
     font-weight: 500;
 }
+
 .alert-success {
     background-color: rgba(30, 200, 100, 0.1);
     color: #0f5132;
     border: 1px solid rgba(30, 200, 100, 0.3);
 }
+
 .alert-error {
     background-color: rgba($color-1, 0.1);
     color: $color-1;

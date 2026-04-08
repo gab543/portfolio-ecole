@@ -1,7 +1,10 @@
 <!-- Hero / About Section -->
 <section id="about" class="section-about">
     <div class="container">
-        <h1>Bonjour, je suis <?= htmlspecialchars($profile->full_name ?? 'Developpeur') ?></h1>
+        <div class="profile-image">
+            <img src="/assets/img/<?= $profile->image_url ?>" alt="<?= htmlspecialchars($profile->image_alt) ?>">
+        </div>
+        <h1>Bonjour, je suis <span class="name"><?= htmlspecialchars($profile->full_name) ?></span></h1>
         <?php if (!empty($profile->description)): ?>
             <div class="about-description">
                 <?= $profile->description ?>
@@ -18,7 +21,7 @@
 <section id="projects" class="section-projects">
     <div class="container">
         <h2>Mes Projets</h2>
-        
+
         <!-- Filter bar -->
         <div class="project-filters">
             <button class="filter-btn active" data-filter="all">Tous</button>
@@ -32,6 +35,13 @@
         <div class="projects-grid">
             <?php foreach ($projects as $project): ?>
                 <div class="project-card" data-category="<?= $project->id_category ?>">
+                    <?php if (!empty($project->image_url)): ?>
+                        <div class="project-image">
+                            <img src="/upload/<?= htmlspecialchars($project->image_url) ?>"
+                                alt="<?= htmlspecialchars($project->image_alt ?? 'Projet image') ?>"
+                                style="width: 100%; border-radius: 8px;">
+                        </div>
+                    <?php endif; ?>
                     <h3><?= htmlspecialchars($project->title) ?></h3>
                     <p><?= htmlspecialchars(substr($project->description, 0, 100)) ?>...</p>
                     <a href="/project?id=<?= $project->id ?>" class="btn-read-more">En savoir plus</a>
