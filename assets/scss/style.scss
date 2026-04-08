@@ -16,7 +16,12 @@ $card-bg: #ffffff;
 
 body {
     margin: 0;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inconsolata", monospace;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
     background-color: $bg-color;
     color: $text-color;
     line-height: 1.5;
@@ -243,16 +248,6 @@ td {
     }
 }
 
-.main-content {
-    width: 80%;
-    margin: 0 auto;
-}
-
-
-@import "skills.scss";
-@import "navbar.scss";
-@import "hero.scss";
-@import "suggestions-pills.scss";
 
 /* Flash Alerts */
 .alert {
@@ -273,3 +268,10 @@ td {
     color: $color-1;
     border: 1px solid rgba($color-1, 0.3);
 }
+
+
+@import "about.scss";
+@import "skills.scss";
+@import "navbar.scss";
+@import "hero.scss";
+@import "suggestions-pills.scss";

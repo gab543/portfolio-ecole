@@ -312,6 +312,18 @@ body.no-scroll {
         flex-direction: row;
         gap: 3rem;
 
+        .nav-home-wrapper {
+            max-width: 0;
+            opacity: 0 !important;
+            overflow: hidden;
+            margin-right: -3rem; /* Cancel the flex gap when hidden */
+            transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+            
+            a {
+                white-space: nowrap;
+            }
+        }
+
         li {
             /* Reset animation logic for desktop */
             opacity: 1 !important;
@@ -346,5 +358,11 @@ body.no-scroll {
                 }
             }
         }
+    }
+
+    .main-header.scrolled .nav-home-wrapper {
+        max-width: 150px;
+        opacity: 1 !important;
+        margin-right: 0;
     }
 }

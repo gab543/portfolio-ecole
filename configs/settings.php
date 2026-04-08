@@ -5,8 +5,8 @@ return [
         'host' => 'localhost',
         'dbname' => 'portfolio',
         'user' => 'root',
-        'password' => '',
-        'port' => '3306'
+        'password' => 'root',
+        'port' => '8889'
     ],
     'mail' => [
         'provider' => getenv('MAIL_PROVIDER') ?: 'mailhog', // 'mailhog', 'mailjet', or 'mailjet_smtp'

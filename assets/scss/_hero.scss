@@ -1,32 +1,20 @@
-.section-about {
-    margin-top: 80px;
-    text-align: center;
+.section-hero {
     height: 100vh;
     background: linear-gradient(135deg, darken($bg-color, 3%) 0%, $bg-color 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
 
-    .profile-image {
-        img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-        }
-    }
-
-    h1 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-
-        .name {
-            font-family: "Passero One", sans-serif;
-            font-weight: 400;
-            font-style: normal;
-        }
-    }
-
-    .about-description {
-        font-size: 1.25rem;
-        color: lighten($text-color, 20%);
-        max-width: 800px;
-        margin: 0 auto;
+    .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        z-index: 2;
+        max-width: 900px;
+        padding: 2rem;
     }
 }
