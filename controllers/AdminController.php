@@ -78,6 +78,12 @@ class AdminController extends Controller {
 
             $projectRepo = new ProjectRepository();
             $projectRepo->create($title, $description, $start_date, $end_date, $labels, $link, $id_category);
+            $pdo = \Services\Database::getConnection();
+            $isPgsql = $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'pgsql';
+            $projectId = (int) $pdo->lastInsertId($isPgsql ? 'projects_id_seq' : null);
+
+            $this->handleImageUpload($projectId, $projectRepo);
+
             Session::setFlash('success', 'Projet ajouté avec succès.');
         }
         $this->redirect('/admin/projects');
@@ -92,6 +98,7 @@ class AdminController extends Controller {
 
         $projectRepo = new ProjectRepository();
         $project = $projectRepo->findById((int) $id);
+        $projectImages = $projectRepo->getImages((int) $id);
 
         $categoryRepo = new \Repositories\CategoryRepository();
         $categories = $categoryRepo->findAll();
@@ -102,6 +109,7 @@ class AdminController extends Controller {
         $this->render('admin/project_form', [
             'action' => '/admin/projects/update',
             'project' => $project,
+            'projectImages' => $projectImages,
             'categories' => $categories,
             'skills' => $skills
         ]);
@@ -125,9 +133,80 @@ class AdminController extends Controller {
 
             $projectRepo = new ProjectRepository();
             $projectRepo->update((int) $id, $title, $description, $start_date, $end_date, $labels, $link, $id_category);
+            
+            $this->handleImageUpload((int) $id, $projectRepo);
+
             Session::setFlash('success', 'Projet mis à jour avec succès.');
         }
         $this->redirect('/admin/projects');
+    }
+
+    private function handleImageUpload(int $projectId, ProjectRepository $projectRepo) {
+        $orderedImageIds = [];
+        $orderInfo = isset($_POST['image_order']) ? json_decode($_POST['image_order'], true) : [];
+
+        // Itérer l'ordre envoyé par le client (JS)
+        if (is_array($orderInfo)) {
+            foreach ($orderInfo as $item) {
+                if (strpos($item, 'existing_') === 0) {
+                    $imageId = (int) substr($item, 9);
+                    $orderedImageIds[] = $imageId;
+                } elseif (strpos($item, 'new_') === 0) {
+                    $index = (int) substr($item, 4);
+                    // Upload le fichier coorespondant dans $_FILES['new_files']
+                    if (isset($_FILES['new_files']['name'][$index]) && $_FILES['new_files']['error'][$index] === UPLOAD_ERR_OK) {
+                        $tmpName = $_FILES['new_files']['tmp_name'][$index];
+                        $name = basename($_FILES['new_files']['name'][$index]);
+                        $targetName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $name);
+                        $uploadDir = __DIR__ . '/../public/upload/';
+                        
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0777, true);
+                        }
+
+                        $targetFile = $uploadDir . $targetName;
+
+                        if (move_uploaded_file($tmpName, $targetFile)) {
+                            // On insère l'image et on récupère son ID avant de la garder pour le sync
+                            $newImageId = $projectRepo->insertImage($targetName, 'Image pour ' . $projectId);
+                            if ($newImageId) {
+                                $orderedImageIds[] = $newImageId;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Si aucun JS n'a intercepté, fallback pour upload standard multi (image[])
+        if (empty($orderInfo) && isset($_FILES['image']) && is_array($_FILES['image']['name'])) {
+            foreach ($_FILES['image']['name'] as $idx => $name) {
+                if ($_FILES['image']['error'][$idx] === UPLOAD_ERR_OK) {
+                    $tmpName = $_FILES['image']['tmp_name'][$idx];
+                    $targetName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', basename($name));
+                    $uploadDir = __DIR__ . '/../public/upload/';
+                    
+                    if (!is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+                    if (move_uploaded_file($tmpName, $uploadDir . $targetName)) {
+                        $newId = $projectRepo->insertImage($targetName, 'Image pour ' . $projectId);
+                        if ($newId) $orderedImageIds[] = $newId;
+                    }
+                }
+            }
+            
+            // On veut aussi garder les images qui existaient déjà dans la BDD pour ce paramétrage au fallback
+            $existing = $projectRepo->getImages($projectId);
+            foreach ($existing as $img) {
+                if (!in_array($img['id'], $orderedImageIds)) {
+                     // on met les nouvelles en premier, les anciennes après
+                     $orderedImageIds[] = $img['id'];
+                }
+            }
+        }
+
+        $projectRepo->syncImages($projectId, $orderedImageIds);
     }
 
     public function deleteProject() {

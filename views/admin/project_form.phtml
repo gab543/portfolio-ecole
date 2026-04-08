@@ -1,3 +1,6 @@
+<div class="admin-breadcrumb">
+    <a href="/admin">Tableau de bord</a> <span>/</span> <a href="/admin/projects">Gestion des projets</a> <span>/</span> <?= $project ? 'Modifier' : 'Ajouter' ?> un projet
+</div>
 <h1><?= $project ? 'Modifier un projet' : 'Ajouter un projet' ?></h1>
 
 <?php
@@ -8,7 +11,7 @@ if ($success) echo '<div class="alert alert-success">' . htmlspecialchars($succe
 if ($error) echo '<div class="alert alert-error">' . htmlspecialchars($error) . '</div>';
 ?>
 
-<form method="POST" action="<?= htmlspecialchars($action) ?>">
+<form method="POST" action="<?= htmlspecialchars($action) ?>" enctype="multipart/form-data">
     <?php if ($project): ?>
         <input type="hidden" name="id" value="<?= htmlspecialchars($project->id) ?>">
     <?php endif; ?>
@@ -19,9 +22,13 @@ if ($error) echo '<div class="alert alert-error">' . htmlspecialchars($error) . 
     </div>
 
     <div class="form-group">
-        <label for="description">Description</label>
-        <div id="editor"></div>
-        <textarea name="description" id="description" style="display:none;"><?= $project ? htmlspecialchars($project->description) : '' ?></textarea>
+        <label for="description">Description (Bio)</label>
+        <!-- Here goes the Quill editor container -->
+        <div id="editor-container" class="quill-editor-container">
+            <?= $project->description ?? '' ?>
+        </div>
+        <!-- Hidden input to store Quill HTML content for submission -->
+        <input type="hidden" name="description" id="description">
     </div>
 
     <div class="form-group">
@@ -63,6 +70,322 @@ if ($error) echo '<div class="alert alert-error">' . htmlspecialchars($error) . 
         </select>
     </div>
 
-    <button class="button" type="submit"><?= $project ? 'Mettre à jour' : 'Créer' ?></button>
+    <div class="form-group">
+        <label>Images du projet (Glissez-déposez pour réordonner, la 1ère sera la couverture)</label>
+        
+        <div id="images-grid" class="images-grid">
+            <?php if (isset($projectImages) && is_array($projectImages)): ?>
+                <?php foreach ($projectImages as $img): ?>
+                    <div class="image-thumbnail" draggable="true" data-id="<?= htmlspecialchars($img['id']) ?>">
+                        <img src="/upload/<?= htmlspecialchars($img['url']) ?>" alt="Project Image">
+                        <span class="cover-badge">COVER</span>
+                        <button type="button" class="remove-btn" title="Détacher">&times;</button>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+
+        <input type="file" id="image-upload" multiple accept="image/*" style="margin-top: 1rem;">
+    </div>
+
+    <!-- GLOBAL PREVIEW SECTION -->
+    <div class="form-group" style="margin-top: 3rem;">
+        <label>Aperçu (Vue Accueil)</label>
+        <div style="background: var(--bg-color, #636363); padding: 2rem; border-radius: 8px;">
+            <div class="projects-grid" style="display: block; max-width: 400px; margin: 0 auto;">
+                <div class="project-card" id="live-project-card">
+                    <div class="project-image" id="live-image-wrapper" style="display:none;">
+                        <img id="live-image" src="" alt="Preview" style="width: 100%; border-radius: 8px;">
+                    </div>
+                    <h3 id="live-title">Titre du projet</h3>
+                    <p id="live-desc">Description courte...</p>
+                    <a href="#" class="btn-read-more" onclick="return false;">En savoir plus</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="button" type="submit" id="submit-btn"><?= $project ? 'Mettre à jour' : 'Créer' ?></button>
     <a class="button button-secondary" href="/admin/projects">Annuler</a>
 </form>
+
+<style>
+.images-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+    min-height: 100px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+.image-thumbnail {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    cursor: grab;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.image-thumbnail.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+.image-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.image-thumbnail .cover-badge {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: #A92831;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: none;
+}
+/* The first element is always the cover */
+.images-grid .image-thumbnail:first-child .cover-badge {
+    display: block;
+}
+.image-thumbnail .remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+.image-thumbnail .remove-btn:hover {
+    background: red;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const grid = document.getElementById('images-grid');
+    const uploadInput = document.getElementById('image-upload');
+    const form = document.querySelector('form');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    // Live preview elements
+    const liveTitle = document.getElementById('live-title');
+    const liveDesc = document.getElementById('live-desc');
+    const liveImageWrapper = document.getElementById('live-image-wrapper');
+    const liveImage = document.getElementById('live-image');
+    
+    // Inputs
+    const inputTitle = document.getElementById('title');
+    const inputDesc = document.getElementById('description');
+
+    let newFilesArray = [];
+    let fileIndexCounter = 0;
+
+    // --- Drag and Drop Logic ---
+    let draggedItem = null;
+
+    function addDragEvents(elem) {
+        elem.addEventListener('dragstart', function(e) {
+            draggedItem = this;
+            setTimeout(() => this.classList.add('dragging'), 0);
+        });
+
+        elem.addEventListener('dragend', function(e) {
+            this.classList.remove('dragging');
+            draggedItem = null;
+            updateLivePreview();
+        });
+    }
+
+    grid.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(grid, e.clientX, e.clientY);
+        if (draggedItem) {
+            if (afterElement == null) {
+                grid.appendChild(draggedItem);
+            } else {
+                grid.insertBefore(draggedItem, afterElement);
+            }
+        }
+    });
+
+    function getDragAfterElement(container, x, y) {
+        const draggableElements = [...container.querySelectorAll('.image-thumbnail:not(.dragging)')];
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            // A simple distance heuristic
+            const dx = x - (box.left + box.width / 2);
+            const dy = y - (box.top + box.height / 2);
+            const distance = Math.sqrt(dx*dx + dy*dy);
+            
+            // Wait, for grid, determining purely by distance is safest compared to vertical 1D arrays
+            if (distance < closest.dist) {
+                // If we are to the left/top, insert before it
+                return { offset: dx, element: child, dist: distance };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY, dist: Number.POSITIVE_INFINITY }).element;
+    }
+
+    // Attach drag events to initial elements
+    grid.querySelectorAll('.image-thumbnail').forEach(addDragEvents);
+
+    // --- Remove Button Logic ---
+    grid.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-btn')) {
+            const thumbnail = e.target.closest('.image-thumbnail');
+            if(thumbnail.hasAttribute('data-file-index')) {
+                // Technically we keep it in newFilesArray but don't send it, because sending maps via DOM array.
+            }
+            thumbnail.remove();
+            updateLivePreview();
+        }
+    });
+
+    // --- File Upload Logic ---
+    uploadInput.addEventListener('change', function(e) {
+        Array.from(e.target.files).forEach(file => {
+            const fileIndex = fileIndexCounter++;
+            newFilesArray.push({ index: fileIndex, file: file });
+
+            const reader = new FileReader();
+            reader.onload = function(eResult) {
+                const div = document.createElement('div');
+                div.className = 'image-thumbnail';
+                div.setAttribute('draggable', 'true');
+                div.setAttribute('data-file-index', fileIndex);
+                
+                div.innerHTML = `
+                    <img src="${eResult.target.result}" alt="Uploaded Image">
+                    <span class="cover-badge">COVER</span>
+                    <button type="button" class="remove-btn" title="Retirer">&times;</button>
+                `;
+                addDragEvents(div);
+                grid.appendChild(div);
+                updateLivePreview();
+            };
+            reader.readAsDataURL(file);
+        });
+        // Reset input value so same file can be selected again if needed
+        uploadInput.value = '';
+    });
+
+    // --- Live Preview Logic ---
+    function updateLivePreview() {
+        liveTitle.textContent = inputTitle.value || 'Titre du projet';
+        
+        let rawHtml = inputDesc.value;
+        if(window.quill) rawHtml = window.quill.root.innerHTML;
+        
+        // Strip HTML to emulate substr(100) exactly as in PHP
+        const tmp = document.createElement("DIV");
+        tmp.innerHTML = rawHtml;
+        const text = tmp.textContent || tmp.innerText || "";
+        liveDesc.textContent = (text.substring(0, 100) || 'Description courte...') + (text.length > 100 ? '...' : '');
+
+        // Update image (first child)
+        const firstElem = grid.firstElementChild;
+        if (firstElem) {
+            const imgEl = firstElem.querySelector('img');
+            if (imgEl) {
+                liveImage.src = imgEl.src;
+                liveImageWrapper.style.display = 'block';
+            }
+        } else {
+            liveImageWrapper.style.display = 'none';
+            liveImage.src = '';
+        }
+    }
+
+    inputTitle.addEventListener('input', updateLivePreview);
+    inputDesc.addEventListener('input', updateLivePreview);
+
+    // If Quill is used:
+    const observer = new MutationObserver((mutations) => updateLivePreview());
+    if (document.getElementById('editor-container')) {
+        setTimeout(() => { // wait for quill initialization
+            const qlEditor = document.querySelector('.ql-editor');
+            if(qlEditor) observer.observe(qlEditor, { childList: true, characterData: true, subtree: true });
+        }, 1000);
+    }
+    
+    // Initial preview
+    setTimeout(updateLivePreview, 100);
+
+    // --- Form Intercept ---
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Ensure Quill content is saved
+        if (window.quill) {
+            document.getElementById('description').value = window.quill.root.innerHTML;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enregistrement...';
+
+        const formData = new FormData(form);
+
+        // Build order array
+        const order = [];
+        const finalNewFiles = []; // Files we actually send
+
+        grid.querySelectorAll('.image-thumbnail').forEach((elem) => {
+            if (elem.hasAttribute('data-id')) {
+                order.push('existing_' + elem.getAttribute('data-id'));
+            } else if (elem.hasAttribute('data-file-index')) {
+                const idx = parseInt(elem.getAttribute('data-file-index'));
+                const fileObj = newFilesArray.find(f => f.index === idx);
+                if (fileObj) {
+                    order.push('new_' + finalNewFiles.length); // re-map to compact array index
+                    finalNewFiles.push(fileObj.file);
+                }
+            }
+        });
+
+        formData.set('image_order', JSON.stringify(order));
+        
+        // Append all files to new_files[]
+        finalNewFiles.forEach((file, idx) => {
+            formData.append('new_files[' + idx + ']', file);
+        });
+
+        // Send via fetch
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                // If it doesn't redirect automatically, just force to projects page
+                window.location.href = '/admin/projects';
+            }
+        })
+        .catch(err => {
+            console.error('Submission error:', err);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Erreur! Réessayer';
+        });
+    });
+});
+</script>

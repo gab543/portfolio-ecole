@@ -57,7 +57,8 @@ class ProjectRepository
         $stmt = $this->db->prepare(
             "SELECT i.* FROM \"images\" i " .
             "JOIN \"project images\" pi ON pi.id_image = i.id " .
-            "WHERE pi.id_project = ?"
+            "WHERE pi.id_project = ? " .
+            "ORDER BY pi.id ASC"
         );
         $stmt->execute([$projectId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -77,7 +78,45 @@ class ProjectRepository
 
     public function delete(int $id): bool
     {
+        // Supprimer d'abord les liaisons pour éviter les erreurs de clés étrangères
+        $stmt = $this->db->prepare("DELETE FROM \"project images\" WHERE id_project = ?");
+        $stmt->execute([$id]);
+
         $stmt = $this->db->prepare("DELETE FROM projects WHERE id = ?");
         return $stmt->execute([$id]);
+    }
+
+    public function insertImage(string $url, string $alt): int
+    {
+        $stmt = $this->db->prepare("INSERT INTO images (url, alt, is_cover) VALUES (?, ?, false)");
+        $stmt->execute([$url, $alt]);
+        
+        $isPgsql = $this->db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'pgsql';
+        return (int) $this->db->lastInsertId($isPgsql ? 'images_id_seq' : null);
+    }
+
+    public function syncImages(int $projectId, array $orderedImageIds): void
+    {
+        // 1. Supprimer l'ordre actuel pour ce projet
+        $stmt = $this->db->prepare("DELETE FROM \"project images\" WHERE id_project = ?");
+        $stmt->execute([$projectId]);
+
+        $isPgsql = $this->db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'pgsql';
+
+        // 2. Réinsérer dans l'ordre du tableau
+        $first = true;
+        foreach ($orderedImageIds as $imageId) {
+            $stmt = $this->db->prepare("INSERT INTO \"project images\" (id_project, id_image) VALUES (?, ?)");
+            $stmt->execute([$projectId, $imageId]);
+
+            // Mettre à jour is_cover
+            // pgsql utilise true/false boolean strings natively via PDO en interpolation facile pour ces cas ou PDO::PARAM_BOOL.
+            // On gère mysql/pgsql de façon sûre.
+            $coverVal = $first ? ($isPgsql ? 'true' : 1) : ($isPgsql ? 'false' : 0);
+            $stmt = $this->db->prepare("UPDATE images SET is_cover = {$coverVal} WHERE id = ?");
+            $stmt->execute([$imageId]);
+
+            $first = false;
+        }
     }
 }

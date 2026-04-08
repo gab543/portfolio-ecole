@@ -3,153 +3,153 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
 <script>
-const { Engine, World, Bodies, Runner, Mouse, MouseConstraint, Events } = Matter;
+  const { Engine, World, Bodies, Runner, Mouse, MouseConstraint, Events } = Matter;
 
-const BOX = document.getElementById('gravity-box');
-const W = BOX.clientWidth;
-const H = BOX.clientHeight;
+  const BOX = document.getElementById('gravity-box');
+  const W = BOX.clientWidth;
+  const H = BOX.clientHeight;
 
-const engine = Engine.create();
-engine.gravity.y = 1;
+  const engine = Engine.create();
+  engine.gravity.y = 1;
 
-const world = engine.world;
-const thickness = 100;
+  const world = engine.world;
+  const thickness = 100;
 
-// sol
-World.add(world, Bodies.rectangle(W/2, H + thickness/2, W, thickness, {
-  isStatic: true
-}));
+  // sol
+  World.add(world, Bodies.rectangle(W / 2, H + thickness / 2, W, thickness, {
+    isStatic: true
+  }));
 
-// plafond
-World.add(world, Bodies.rectangle(W/2, -H, W, thickness, {
-  isStatic: true
-}));
+  // plafond
+  World.add(world, Bodies.rectangle(W / 2, -H, W, thickness, {
+    isStatic: true
+  }));
 
-// murs
-World.add(world, [
-  Bodies.rectangle(-thickness/2, H/2, thickness, H * 5, { isStatic: true }),
-  Bodies.rectangle(W + thickness/2, H/2, thickness, H * 5, { isStatic: true })
-]);
+  // murs
+  World.add(world, [
+    Bodies.rectangle(-thickness / 2, H / 2, thickness, H * 5, { isStatic: true }),
+    Bodies.rectangle(W + thickness / 2, H / 2, thickness, H * 5, { isStatic: true })
+  ]);
 
-<?php
-$skillsArray = [];
-if (isset($profile) && !empty($profile->skills)) {
+  <?php
+  $skillsArray = [];
+  if (isset($profile) && !empty($profile->skills)) {
     $skillsArray = array_map('trim', explode(',', $profile->skills));
-}
-// Fallback if no skills defined
-if (empty($skillsArray)) {
-    $skillsArray = ["PHP", "HTML / CSS", "SCSS", "JAVASCRIPT", "UI / UX"];
-}
-?>
-// mots
-const WORDS = <?= json_encode($skillsArray) ?>;
-const bodies = [];
-
-WORDS.forEach(text => {
-  const el = document.createElement('div');
-  el.className = 'word';
-  el.textContent = text;
-  BOX.appendChild(el);
-
-  const rect = el.getBoundingClientRect();
-
-  const body = Bodies.rectangle(
-    Math.random() * (W - rect.width) + rect.width/2,
-    -Math.random() * 400,
-    rect.width,
-    rect.height,
-    {
-      restitution: 0.2,
-      friction: 0.8,
-      frictionAir: 0.02,
-      density: 0.002
-    }
-  );
-
-  body.el = el;
-  World.add(world, body);
-  bodies.push(body);
-});
-
-// 🖱️ GRAB
-const mouse = Mouse.create(BOX);
-
-const mouseConstraint = MouseConstraint.create(engine, {
-  mouse,
-  constraint: {
-    stiffness: 0.2,
-    render: { visible: false }
   }
-});
+  // Fallback if no skills defined
+  if (empty($skillsArray)) {
+    $skillsArray = ["PHP", "HTML / CSS", "SCSS", "JAVASCRIPT", "UI / UX"];
+  }
+  ?>
+  // mots
+  const WORDS = <?= json_encode($skillsArray) ?>;
+  const bodies = [];
 
-World.add(world, mouseConstraint);
+  WORDS.forEach(text => {
+    const el = document.createElement('div');
+    el.className = 'word';
+    el.textContent = text;
+    BOX.appendChild(el);
 
+    const rect = el.getBoundingClientRect();
 
-const circle = document.createElement("div");
-circle.className = "cursor-circle";
-BOX.appendChild(circle);
+    const body = Bodies.rectangle(
+      Math.random() * (W - rect.width) + rect.width / 2,
+      -Math.random() * 400,
+      rect.width,
+      rect.height,
+      {
+        restitution: 0.2,
+        friction: 0.8,
+        frictionAir: 0.02,
+        density: 0.002
+      }
+    );
 
-BOX.addEventListener("mousemove", (e) => {
-  const rect = BOX.getBoundingClientRect();
-  circle.style.left = (e.clientX - rect.left) + "px";
-  circle.style.top = (e.clientY - rect.top) + "px";
-});
-
-BOX.addEventListener("mouseleave", () => {
-  circle.style.opacity = "0";
-  circle.style.transform = "translate(-50%, -50%) scale(0.5)";
-});
-
-BOX.addEventListener("mouseenter", () => {
-  circle.style.opacity = "1";
-  circle.style.transform = "translate(-50%, -50%) scale(1)";
-});
-
-// 🔥 effet scale au grab
-Events.on(mouseConstraint, "startdrag", () => {
-  circle.style.transform = "translate(-50%, -50%) scale(0.7)";
-});
-
-Events.on(mouseConstraint, "enddrag", () => {
-  circle.style.transform = "translate(-50%, -50%) scale(1)";
-});
-
-// 🔄 update DOM
-function update() {
-  bodies.forEach(body => {
-    const el = body.el;
-    const w = el.offsetWidth;
-    const h = el.offsetHeight;
-
-    // Check if body is out of bounds
-    if (
-      body.position.y > H + 150 || 
-      body.position.y < -H - 800 || 
-      body.position.x > W + 150 || 
-      body.position.x < -150
-    ) {
-      // Respawn at the top
-      Matter.Body.setPosition(body, {
-        x: Math.random() * (W - w) + w/2,
-        y: -100 - Math.random() * 200
-      });
-      // Reset velocity
-      Matter.Body.setVelocity(body, { x: 0, y: 0 });
-      Matter.Body.setAngularVelocity(body, 0);
-    }
-
-    el.style.transform = `
-      translate(${body.position.x - w/2}px, ${body.position.y - h/2}px)
-      rotate(${body.angle}rad)
-    `;
+    body.el = el;
+    World.add(world, body);
+    bodies.push(body);
   });
 
-  requestAnimationFrame(update);
-}
+  // 🖱️ GRAB
+  const mouse = Mouse.create(BOX);
 
-update();
+  const mouseConstraint = MouseConstraint.create(engine, {
+    mouse,
+    constraint: {
+      stiffness: 0.2,
+      render: { visible: false }
+    }
+  });
 
-// runner
-const runner = Runner.create();
-Runner.run(runner, engine);
+  World.add(world, mouseConstraint);
+
+
+  const circle = document.createElement("div");
+  circle.className = "cursor-circle";
+  BOX.appendChild(circle);
+
+  BOX.addEventListener("mousemove", (e) => {
+    const rect = BOX.getBoundingClientRect();
+    circle.style.left = (e.clientX - rect.left) + "px";
+    circle.style.top = (e.clientY - rect.top) + "px";
+  });
+
+  BOX.addEventListener("mouseleave", () => {
+    circle.style.opacity = "0";
+    circle.style.transform = "translate(-50%, -50%) scale(0.5)";
+  });
+
+  BOX.addEventListener("mouseenter", () => {
+    circle.style.opacity = "1";
+    circle.style.transform = "translate(-50%, -50%) scale(1)";
+  });
+
+  // 🔥 effet scale au grab
+  Events.on(mouseConstraint, "startdrag", () => {
+    circle.style.transform = "translate(-50%, -50%) scale(0.7)";
+  });
+
+  Events.on(mouseConstraint, "enddrag", () => {
+    circle.style.transform = "translate(-50%, -50%) scale(1)";
+  });
+
+  // 🔄 update DOM
+  function update() {
+    bodies.forEach(body => {
+      const el = body.el;
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+
+      // Check if body is out of bounds
+      if (
+        body.position.y > H + 150 ||
+        body.position.y < -H - 800 ||
+        body.position.x > W + 150 ||
+        body.position.x < -150
+      ) {
+        // Respawn at the top
+        Matter.Body.setPosition(body, {
+          x: Math.random() * (W - w) + w / 2,
+          y: -100 - Math.random() * 200
+        });
+        // Reset velocity
+        Matter.Body.setVelocity(body, { x: 0, y: 0 });
+        Matter.Body.setAngularVelocity(body, 0);
+      }
+
+      el.style.transform = `
+      translate(${body.position.x - w / 2}px, ${body.position.y - h / 2}px)
+      rotate(${body.angle}rad)
+    `;
+    });
+
+    requestAnimationFrame(update);
+  }
+
+  update();
+
+  // runner
+  const runner = Runner.create();
+  Runner.run(runner, engine);
 </script>

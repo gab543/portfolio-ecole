@@ -12,45 +12,70 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/quill.snow.css">
     <script src="/assets/js/scrollreveal.js" defer></script>
+    <script src="/assets/js/quill.js" defer></script>
+    <script type="module" src="/assets/js/main.js" defer></script>
 </head>
 
 <body>
 
-    <header class="main-header">
-        <div class="header-container">
-            <div class="logo">
-                <a href="/"><?= isset($profile) ? htmlspecialchars($profile->full_name) : 'Mon Portfolio' ?></a>
-            </div>
+    <?php $isAdminRoute = strpos(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/admin') === 0; ?>
 
-            <button class="burger-menu-btn" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+    <?php if ($isAdminRoute): ?>
 
-            <nav class="navbar">
-                <ul class="nav-links">
-                    <li class="nav-home-wrapper"><a href="/">Accueil</a></li>
-                    <li><a href="/#about">À propos</a></li>
-                    <li><a href="/#skills">Compétences</a></li>
-                    <li><a href="/#projects">Projets</a></li>
-                    <li><a href="/admin">Admin</a></li>
-                </ul>
-            </nav>
+        <div class="admin-layout">
+            <aside class="admin-sidebar">
+                <h2>Admin</h2>
+                <nav>
+                    <a href="/">🏠 Accueil (Site)</a>
+                    <a href="/admin">📊 Tableau de bord</a>
+                    <a href="/admin/profile">👤 Mon Profil</a>
+                    <a href="/admin/projects">📁 Mes Projets</a>
+                    <a href="/admin/logout">🚪 Déconnexion</a>
+                </nav>
+            </aside>
+            <main class="admin-main">
+                <?= $content ?? '' ?>
+            </main>
         </div>
-    </header>
 
-    <main class="main-content">
-        <?= $content ?? '' ?>
-    </main>
+    <?php else: ?>
+
+        <header class="main-header">
+            <div class="header-container">
+                <div class="logo">
+                    <a href="/"><?= isset($profile) ? htmlspecialchars($profile->full_name) : 'Mon Portfolio' ?></a>
+                </div>
+
+                <button class="burger-menu-btn" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <nav class="navbar">
+                    <ul class="nav-links">
+                        <li class="nav-home-wrapper"><a href="/">Accueil</a></li>
+                        <li><a href="/#about">À propos</a></li>
+                        <li><a href="/#skills">Compétences</a></li>
+                        <li><a href="/#projects">Projets</a></li>
+                        <li><a href="/admin">Admin</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <?= $content ?? '' ?>
+        </main>
+
+    <?php endif; ?>
 
     <footer class="main-footer">
         <p>&copy; <?= date('Y') ?> <?= isset($profile) ? htmlspecialchars($profile->full_name) : 'Portfolio' ?>. Tous
             droits réservés.</p>
     </footer>
 
-    <script type="module" src="/assets/js/main.js" defer></script>
-    <script src="/assets/js/quill.js" defer></script>
+
 </body>
 
 </html>

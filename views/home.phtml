@@ -22,24 +22,14 @@
                 <a href="#projects" class="btn-primary hero-btn">Voir mes projets</a>
                 <a href="#skills" class="btn-outline hero-btn">Mes compétences</a>
             </div>
-</section>
-
-
-
-
-
-<!-- Hero / About Section -->
-<section id="about" class="section-about">
-    <div class="container">
-        <div class="profile-image">
-            <img src="/assets/img/<?= $profile->image_url ?>" alt="<?= htmlspecialchars($profile->image_alt) ?>">
         </div>
-        <h1>Bonjour, je suis <span class="name"><?= htmlspecialchars($profile->full_name) ?></span></h1>
-        <?php if (!empty($profile->description)): ?>
-            <div class="about-description">
-                <?= $profile->description ?>
+
+        <div class="hero-image-wrapper">
+            <div class="image-border">
+                <img src="/assets/img/<?= htmlspecialchars($profile->image_url ?? '') ?>"
+                    alt="<?= htmlspecialchars($profile->image_alt ?? 'Profil') ?>" class="profile-img">
             </div>
-        <?php endif; ?>
+        </div>
     </div>
 </section>
 
@@ -72,7 +62,7 @@
                         </div>
                     <?php endif; ?>
                     <h3><?= htmlspecialchars($project->title) ?></h3>
-                    <p><?= htmlspecialchars(substr($project->description, 0, 100)) ?>...</p>
+                    <p><?= htmlspecialchars(substr(strip_tags($project->description), 0, 100)) ?>...</p>
                     <a href="/project?id=<?= $project->id ?>" class="btn-read-more">En savoir plus</a>
                 </div>
             <?php endforeach; ?>

@@ -1,31 +1,37 @@
 export function initEditor() {
-    const editor = document.getElementById('editor');
-    if (!editor) return;
+    const editorEl = document.getElementById('editor') || document.getElementById('editor-container');
+    if (!editorEl) return;
 
     // Check if Quill is available globally (loaded via <script> tag)
     if (typeof Quill !== 'undefined') {
-        const quill = new Quill('#editor', {
+        const quillId = editorEl.id;
+        const quill = new Quill('#' + quillId, {
             theme: 'snow'
         });
 
-        // Sync with hidden textarea
-        const descriptionTextarea = document.getElementById('description');
-        if (descriptionTextarea) {
+        window.quill = quill; // Expose globally for form script
+
+        // Sync with hidden textarea/input
+        const descriptionInput = document.getElementById('description');
+        if (descriptionInput) {
             // Set initial content if editing
-            if (descriptionTextarea.value) {
-                quill.root.innerHTML = descriptionTextarea.value;
+            if (descriptionInput.value) {
+                quill.root.innerHTML = descriptionInput.value;
+            } else if (editorEl.innerHTML.trim() !== '') {
+                // If it was rendered inside the div directly (like the updated project_form.phtml)
+                descriptionInput.value = quill.root.innerHTML;
             }
 
             // Update textarea on change
-            quill.on('text-change', function() {
-                descriptionTextarea.value = quill.root.innerHTML;
+            quill.on('text-change', function () {
+                descriptionInput.value = quill.root.innerHTML;
             });
 
             // Ensure on form submit
-            const form = editor.closest('form');
+            const form = editorEl.closest('form');
             if (form) {
-                form.addEventListener('submit', function() {
-                    descriptionTextarea.value = quill.root.innerHTML;
+                form.addEventListener('submit', function () {
+                    descriptionInput.value = quill.root.innerHTML;
                 });
             }
         }

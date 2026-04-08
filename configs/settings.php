@@ -13,7 +13,6 @@ return [
                 'port' => $parsed['port'] ?? '6543'
             ];
         }
-
         //Pour MAMP
         return [
             'driver' => 'mysql',
@@ -21,7 +20,7 @@ return [
             'dbname' => 'portfolio',
             'user' => 'root',
             'password' => 'root',
-            'port' => '8889'
+            'port' => '3306'
         ];
     })(),
     'mail' => [
@@ -68,6 +67,6 @@ return [
         '/admin/request-access' => ['controller' => 'Controllers\\AuthController', 'action' => 'requestAccess'],
         '/admin/submit-request' => ['controller' => 'Controllers\\AuthController', 'action' => 'submitRequest'],
         '/admin/confirm-access' => ['controller' => 'Controllers\\AuthController', 'action' => 'confirmAccess'],
-        '/admin/grant-access'  => ['controller' => 'Controllers\\AuthController', 'action' => 'grantAccess']
+        '/admin/grant-access' => ['controller' => 'Controllers\\AuthController', 'action' => 'grantAccess']
     ]
 ];

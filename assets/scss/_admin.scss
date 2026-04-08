@@ -1,0 +1,261 @@
+/* =========================================
+   Admin Styles
+   ========================================= */
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: lighten($bg-color, 15%);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 2rem 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.admin-sidebar {
+    width: 250px;
+    background: linear-gradient(180deg, $color-2 0%, $color-1 100%);
+    color: white;
+    padding: 2rem;
+
+    h2 {
+        margin-top: 0;
+        font-family: 'Passero One', cursive;
+        color: $primary-color;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    a {
+        color: #e2dcdb;
+        text-decoration: none;
+        display: block;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: $color-3;
+            color: white;
+            padding-left: 1.5rem;
+        }
+    }
+}
+
+.admin-main {
+    flex: 1;
+    padding: 2rem 3rem;
+    background: $card-bg;
+    color: $text-color;
+
+    h1 {
+        font-family: 'Passero One', cursive;
+        font-size: 2.5rem;
+        margin-top: 0;
+        color: $color-1;
+    }
+}
+
+/* Breadcrumbs (Retour en arrière) */
+.admin-breadcrumb {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    color: lighten($text-color, 20%);
+
+    a {
+        color: $primary-color;
+        text-decoration: none;
+        transition: color 0.2s;
+
+        &:hover {
+            color: $primary-hover;
+            text-decoration: underline;
+        }
+    }
+
+    span {
+        margin: 0 0.5rem;
+        color: #ccc;
+    }
+}
+
+.flash {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+
+    &.success {
+        background: rgba(30, 200, 100, 0.1);
+        color: #0f5132;
+        border: 1px solid rgba(30, 200, 100, 0.3);
+    }
+
+    &.error {
+        background: rgba($color-1, 0.1);
+        color: $color-1;
+        border: 1px solid rgba($color-1, 0.3);
+    }
+}
+
+/* Admin specific components */
+.admin-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.login-wrapper {
+    max-width: 400px;
+    margin: 4rem auto;
+    background: white;
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+    h1 {
+        font-family: 'Passero One', cursive;
+        text-align: center;
+        color: $primary-color;
+        margin-bottom: 2rem;
+    }
+}
+
+.btn-block {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.text-error {
+    color: red;
+    margin-bottom: 1rem;
+}
+
+.dashboard-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    flex: 1;
+    min-width: 200px;
+    text-align: center;
+
+    h3 {
+        font-size: 3rem;
+        margin: 0;
+        color: $primary-color;
+        font-family: 'Passero One', cursive;
+    }
+
+    p {
+        margin: 0.5rem 0;
+        color: lighten($text-color, 20%);
+        font-size: 1.1rem;
+    }
+}
+
+.quill-editor-container {
+    height: 300px;
+    background: white;
+
+    .ql-editor,
+    .ql-editor * {
+        color: #000 !important;
+    }
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1.5rem;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+}
+
+th {
+    background: lighten($bg-color, 20%);
+    font-weight: bold;
+    color: $color-1;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: $color-2;
+    }
+
+    input[type="url"],
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="date"],
+    textarea,
+    select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: "Inconsolata", monospace;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+
+        &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+        }
+    }
+}
+
+/* Button variants for admin */
+.button-small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+}
+
+.button-danger {
+    background: $color-1;
+    color: white;
+
+    &:hover {
+        background: darken($color-1, 10%);
+    }
+}
