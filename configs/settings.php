@@ -2,11 +2,12 @@
 
 return [
     'database' => [
-        'host' => 'localhost',
-        'dbname' => 'portfolio',
-        'user' => 'root',
-        'password' => 'root',
-        'port' => '8889'
+        'driver' => getenv('POSTGRES_HOST') ? 'pgsql' : (getenv('DB_DRIVER') ?: 'mysql'),
+        'host' => getenv('POSTGRES_HOST') ?: (getenv('DB_HOST') ?: 'localhost'),
+        'dbname' => getenv('POSTGRES_DATABASE') ?: (getenv('DB_NAME') ?: 'portfolio'),
+        'user' => getenv('POSTGRES_USER') ?: (getenv('DB_USER') ?: 'root'),
+        'password' => getenv('POSTGRES_PASSWORD') ?: (getenv('DB_PASS') ?: 'root'),
+        'port' => getenv('POSTGRES_HOST') ? '6543' : (getenv('DB_PORT') ?: '8889')
     ],
     'mail' => [
         'provider' => getenv('MAIL_PROVIDER') ?: 'mailhog', // 'mailhog', 'mailjet', or 'mailjet_smtp'

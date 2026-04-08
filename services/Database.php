@@ -19,8 +19,14 @@ class Database
             $user = $dbConf['user'];
             $pass = $dbConf['password'];
             $port = $dbConf['port'] ?? '8080';
+            $driver = $dbConf['driver'] ?? 'mysql';
 
-            $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
+            if ($driver === 'pgsql') {
+                $dsn = "pgsql:host=$host;port=$port;dbname=$db;sslmode=require";
+            } else {
+                $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
+            }
+
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
