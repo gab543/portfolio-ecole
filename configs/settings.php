@@ -1,14 +1,29 @@
 <?php
 
 return [
-    'database' => [
-        'driver' => 'pgsql',
-        'host' => getenv('POSTGRES_HOST'),
-        'dbname' => getenv('POSTGRES_DATABASE'),
-        'user' => getenv('POSTGRES_USER'),
-        'password' => getenv('POSTGRES_PASSWORD'),
-        'port' => '5432'
-    ],
+    'database' => (function () {
+        if ($url = getenv('POSTGRES_URL')) {
+            $parsed = parse_url($url);
+            return [
+                'driver' => 'pgsql',
+                'host' => $parsed['host'],
+                'dbname' => ltrim($parsed['path'], '/'),
+                'user' => $parsed['user'],
+                'password' => $parsed['pass'],
+                'port' => $parsed['port'] ?? '6543'
+            ];
+        }
+
+        //Pour MAMP
+        return [
+            'driver' => 'mysql',
+            'host' => 'localhost',
+            'dbname' => 'portfolio',
+            'user' => 'root',
+            'password' => 'root',
+            'port' => '8889'
+        ];
+    })(),
     'mail' => [
         'provider' => getenv('MAIL_PROVIDER') ?: 'mailhog', // 'mailhog', 'mailjet', or 'mailjet_smtp'
         'host' => 'localhost',
