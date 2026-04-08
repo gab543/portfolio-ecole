@@ -117,19 +117,33 @@ body {
    ========================================= */
 .admin-layout {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background-color: rgb(137.25, 137.25, 137.25);
-  border-radius: 8px;
+  border-radius: 0;
   overflow: hidden;
-  margin: 2rem 0;
+  margin: 0;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+@media (min-width: 768px) {
+  .admin-layout {
+    flex-direction: row;
+    margin: 2rem 0;
+    border-radius: 8px;
+  }
 }
 
 .admin-sidebar {
-  width: 250px;
+  width: 100%;
   background: linear-gradient(180deg, #37040E 0%, #240902 100%);
   color: white;
-  padding: 2rem;
+  padding: 1.5rem;
+}
+@media (min-width: 768px) {
+  .admin-sidebar {
+    width: 250px;
+    padding: 2rem;
+  }
 }
 .admin-sidebar h2 {
   margin-top: 0;
@@ -138,33 +152,78 @@ body {
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 1rem;
   margin-bottom: 1.5rem;
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .admin-sidebar h2 {
+    text-align: left;
+  }
+}
+.admin-sidebar nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+@media (min-width: 768px) {
+  .admin-sidebar nav {
+    flex-direction: column;
+    gap: 0;
+    display: block;
+  }
 }
 .admin-sidebar a {
   color: #e2dcdb;
   text-decoration: none;
   display: block;
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0;
   border-radius: 4px;
   transition: all 0.3s ease;
+  font-size: 0.9rem;
+  background: rgba(0, 0, 0, 0.1);
+}
+@media (min-width: 768px) {
+  .admin-sidebar a {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    background: transparent;
+  }
 }
 .admin-sidebar a:hover {
   background: #620D14;
   color: white;
-  padding-left: 1.5rem;
+}
+@media (min-width: 768px) {
+  .admin-sidebar a:hover {
+    padding-left: 1.5rem;
+  }
 }
 
 .admin-main {
   flex: 1;
-  padding: 2rem 3rem;
+  padding: 1.5rem 1rem;
   background: #ffffff;
   color: #240902;
 }
+@media (min-width: 768px) {
+  .admin-main {
+    padding: 2rem 3rem;
+  }
+}
 .admin-main h1 {
   font-family: "Passero One", cursive;
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-top: 0;
   color: #240902;
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .admin-main h1 {
+    font-size: 2.5rem;
+    text-align: left;
+  }
 }
 
 /* Breadcrumbs (Retour en arrière) */
@@ -172,6 +231,12 @@ body {
   font-size: 0.9rem;
   margin-bottom: 1.5rem;
   color: rgb(132.6315789474, 33.1578947368, 7.3684210526);
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .admin-breadcrumb {
+    text-align: left;
+  }
 }
 .admin-breadcrumb a {
   color: #A92831;
@@ -191,6 +256,7 @@ body {
   padding: 1rem;
   margin-bottom: 1.5rem;
   border-radius: 4px;
+  text-align: center;
 }
 .flash.success {
   background: rgba(30, 200, 100, 0.1);
@@ -206,24 +272,39 @@ body {
 /* Admin specific components */
 .admin-card {
   background: white;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.05);
   transition: transform 0.2s;
+  margin-bottom: 1.5rem;
 }
-.admin-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+@media (min-width: 768px) {
+  .admin-card {
+    padding: 2rem;
+  }
+}
+@media (min-width: 768px) {
+  .admin-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
 }
 
 .login-wrapper {
   max-width: 400px;
-  margin: 4rem auto;
+  margin: 2rem auto;
   background: white;
-  padding: 3rem;
+  padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 90%;
+}
+@media (min-width: 768px) {
+  .login-wrapper {
+    margin: 4rem auto;
+    padding: 3rem;
+  }
 }
 .login-wrapper h1 {
   font-family: "Passero One", cursive;
@@ -240,30 +321,50 @@ body {
 .text-error {
   color: red;
   margin-bottom: 1rem;
+  display: block;
 }
 
 .dashboard-stats {
   display: flex;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 1.5rem;
   margin-top: 2rem;
-  flex-wrap: wrap;
+}
+@media (min-width: 768px) {
+  .dashboard-stats {
+    flex-direction: row;
+    gap: 2rem;
+  }
 }
 
 .stat-card {
   flex: 1;
-  min-width: 200px;
   text-align: center;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 .stat-card h3 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   margin: 0;
   color: #A92831;
   font-family: "Passero One", cursive;
 }
+@media (min-width: 768px) {
+  .stat-card h3 {
+    font-size: 3rem;
+  }
+}
 .stat-card p {
   margin: 0.5rem 0;
   color: rgb(132.6315789474, 33.1578947368, 7.3684210526);
-  font-size: 1.1rem;
+  font-size: 1rem;
+}
+@media (min-width: 768px) {
+  .stat-card p {
+    font-size: 1.1rem;
+  }
 }
 
 .quill-editor-container {
@@ -275,22 +376,35 @@ body {
   color: #000 !important;
 }
 
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  margin-top: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
 table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  margin-top: 1.5rem;
   background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
-  overflow: hidden;
+  min-width: 600px;
+  /* Force scroll on small screens */
 }
 
 th,
 td {
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid #e2e8f0;
   text-align: left;
+}
+@media (min-width: 768px) {
+  th,
+  td {
+    padding: 1rem 1.5rem;
+  }
 }
 
 th {
@@ -298,8 +412,13 @@ th {
   font-weight: bold;
   color: #240902;
   text-transform: uppercase;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   letter-spacing: 1px;
+}
+@media (min-width: 768px) {
+  th {
+    font-size: 0.9rem;
+  }
 }
 
 tr:last-child td {
@@ -334,6 +453,7 @@ tr:hover td {
   font-family: "Inconsolata", monospace;
   font-size: 1rem;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 .form-group input[type=url]:focus,
 .form-group input[type=text]:focus,

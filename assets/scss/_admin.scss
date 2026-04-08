@@ -38,12 +38,12 @@
         padding-bottom: 1rem;
         margin-bottom: 1.5rem;
         text-align: center;
-        
+
         @media (min-width: 768px) {
             text-align: left;
         }
     }
-    
+
     nav {
         display: flex;
         flex-wrap: wrap;
@@ -66,7 +66,7 @@
         border-radius: 4px;
         transition: all 0.3s ease;
         font-size: 0.9rem;
-        background: rgba(0,0,0,0.1);
+        background: rgba(0, 0, 0, 0.1);
 
         @media (min-width: 768px) {
             padding: 0.75rem 1rem;
@@ -78,6 +78,7 @@
         &:hover {
             background: $color-3;
             color: white;
+
             @media (min-width: 768px) {
                 padding-left: 1.5rem;
             }
@@ -101,7 +102,7 @@
         margin-top: 0;
         color: $color-1;
         text-align: center;
-        
+
         @media (min-width: 768px) {
             font-size: 2.5rem;
             text-align: left;
@@ -229,7 +230,7 @@
     background: white;
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
     h3 {
         font-size: 2.5rem;
@@ -277,7 +278,8 @@ table {
     border-collapse: separate;
     border-spacing: 0;
     background: white;
-    min-width: 600px; /* Force scroll on small screens */
+    min-width: 600px;
+    /* Force scroll on small screens */
 }
 
 th,
