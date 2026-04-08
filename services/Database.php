@@ -22,7 +22,7 @@ class Database
             $driver = $dbConf['driver'] ?? 'mysql';
 
             if ($driver === 'pgsql') {
-                $dsn = "postgresql://postgres:$pass@$host:$port/$db";
+                $dsn = "pgsql:host=$host;port=$port;dbname=$db;sslmode=require";
             } else {
                 $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
             }
