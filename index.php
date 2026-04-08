@@ -1,15 +1,10 @@
 <?php
 
-// Load environment variables from .env file
+// Load environment variables from .env file if it exists
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-    $dotenv->load();
-}
-
-// Optional Composer autoload for external libraries (PHPMailer, etc.)
-if (file_exists(__DIR__ . '/vendor/autoload.php')) {
-    require_once __DIR__ . '/vendor/autoload.php';
+    $dotenv->safeLoad();
 }
 
 spl_autoload_register(function ($class) {
