@@ -1,0 +1,20 @@
+<div class="container my-5 text-center" style="max-width: 600px; margin: 0 auto;">
+    <div class="card p-4 shadow-sm glass">
+        <h1 class="mb-4">Demande d'Accès Admin</h1>
+        <div class="alert alert-warning">
+            L'utilisateur <strong><?= htmlspecialchars($requester_email) ?></strong> a fait une demande pour devenir administrateur de votre portfolio.
+        </div>
+        <p class="mb-4">Si vous acceptez, cet utilisateur pourra modifier vos projets, compétences, etc.</p>
+        
+        <form action="/admin/grant-access" method="POST">
+            <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
+            
+            <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                J'accepte de donner les droits
+            </button>
+            <a href="/admin/login" class="btn btn-outline-danger w-100">
+                Refuser et annuler
+            </a>
+        </form>
+    </div>
+</div>

@@ -83,8 +83,13 @@ class AuthController extends Controller {
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
         $domainName = $_SERVER['HTTP_HOST'];
         $confirmLink = $protocol . $domainName . '/admin/confirm-access?token=' . urlencode($token);
-
-        $to = 'gabriel.caboche@gmail.com'; // TODO: Replace with the exact admin email or dynamic config
+        
+        $settings = require __DIR__ . '/../configs/settings.php';
+        
+        $to = $settings['mail']['admin'] ?? 'gabriel.caboche@gmail.com'; 
+        $fromEmail = $settings['mail']['from'] ?? 'gabriel.caboche@3wacademy.fr';
+        $postmarkApiKey = $settings['mail']['postmark_api_key'] ?? '';
+        
         $subject = 'Nouvelle demande d\'acces au Portfolio';
         $body = "
             <html>
@@ -95,24 +100,35 @@ class AuthController extends Controller {
               <p>Une nouvelle demande d'accès a été formulée.</p>
               <p><strong>Email:</strong> " . htmlspecialchars($email) . "</p>
               <p><strong>Message:</strong><br/>" . nl2br(htmlspecialchars($message)) . "</p>
-              <p><a href='" . $confirmLink . "' style='display:inline-block;padding:10px 20px;background:#007bff;color:#fff;text-decoration:none;border-radius:5px;'>Accepter et créer le compte</a></p>
+              <p><a href='" . $confirmLink . "' style='display:inline-block;padding:10px 20px;background:#007bff;color:#fff;text-decoration:none;border-radius:5px;'>Ouvrir la page de validation</a></p>
             </body>
             </html>
         ";
+        $textBody = "Une demande a été formulée par: $email\nMessage: $message\nLien: $confirmLink";
 
-        $headers = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-        $headers .= "From: no-reply@" . $domainName . "\r\n";
+        try {
+            $client = new \Postmark\PostmarkClient($postmarkApiKey);
+            $sendResult = $client->sendEmail(
+                $fromEmail,
+                $to,
+                $subject,
+                $body,
+                $textBody,
+                "access-request",
+                true,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                "None",
+                NULL,
+                "outbound" // Or "connection" like requested
+            );
 
-        // Try to send mail
-        if (mail($to, $subject, $body, $headers)) {
             Session::setFlash('success', 'Votre demande a bien été envoyée à l\'administrateur.');
-        } else {
-            // Note: On local MAMP without mail setup, mail() might fail. 
-            // We flash success anyway for UX, or an error if they prefer knowing it failed.
-            Session::setFlash('error', 'La fonction mail() a échoué. Assurez-vous que MailHog/MAMP est configuré.');
-            
-            // For testing purposes during dev if mail() fails, we log the link to error_log
+        } catch (\Exception $e) {
+            Session::setFlash('error', 'Erreur d\'envoi Postmark: ' . $e->getMessage());
             error_log("CONFIRMATION LINK: " . $confirmLink);
         }
 
@@ -151,6 +167,44 @@ class AuthController extends Controller {
             $this->redirect('/admin/login');
         }
 
+        // Au lieu de créer le compte, on affiche la page de validation
+        $this->render('admin/confirm_access', [
+            'requester_email' => $data['email'],
+            'token' => $token
+        ]);
+    }
+
+    public function grantAccess() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('/admin/login');
+        }
+
+        $token = $_POST['token'] ?? '';
+        if (!$token) {
+            Session::setFlash('error', 'Lien invalide.');
+            $this->redirect('/admin/login');
+        }
+
+        $decoded = json_decode(base64_decode($token), true);
+        $secret = 'portfolio_secret_key_123!';
+        
+        // Verifications complètes pour la sécurité du POST
+        if (!$decoded || !isset($decoded['payload']) || !isset($decoded['signature'])) {
+            Session::setFlash('error', 'Le jeton de sécurité est corrompu.');
+            $this->redirect('/admin/login');
+        }
+        $expectedSignature = hash_hmac('sha256', $decoded['payload'], $secret);
+        if (!hash_equals($expectedSignature, $decoded['signature'])) {
+            Session::setFlash('error', 'La signature du lien est invalide.');
+            $this->redirect('/admin/login');
+        }
+        
+        $data = json_decode($decoded['payload'], true);
+        if (time() > $data['expires']) {
+            Session::setFlash('error', 'Ce lien a expiré (validité de 24h).');
+            $this->redirect('/admin/login');
+        }
+
         $email = $data['email'];
         $passwordHash = $data['password'];
 
@@ -160,7 +214,7 @@ class AuthController extends Controller {
         $stmtCheck = $db->prepare('SELECT id FROM admins WHERE email = ?');
         $stmtCheck->execute([$email]);
         if ($stmtCheck->fetch()) {
-            Session::setFlash('error', 'Ce compte existe déjà.');
+            Session::setFlash('error', 'Ce compte admin existe déjà.');
             $this->redirect('/admin/login');
         }
 
@@ -168,7 +222,7 @@ class AuthController extends Controller {
         $stmtInsert = $db->prepare('INSERT INTO admins (email, password) VALUES (?, ?)');
         $stmtInsert->execute([$email, $passwordHash]);
 
-        Session::setFlash('success', 'Le compte a été créé et activé avec succès. Vous pouvez maintenant vous connecter.');
+        Session::setFlash('success', 'Le compte admin pour ' . htmlspecialchars($email) . ' a été accordé avec succès !');
         $this->redirect('/admin/login');
     }
 }

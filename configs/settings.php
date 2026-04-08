@@ -25,16 +25,17 @@ return [
         ];
     })(),
     'mail' => [
-        'provider' => getenv('MAIL_PROVIDER') ?: 'mailhog', // 'mailhog', 'mailjet', or 'mailjet_smtp'
+        'provider' => getenv('MAIL_PROVIDER') ?: 'postmark', // postmark default
+        'postmark_api_key' => getenv('POSTMARK_API_KEY'),
         'host' => 'localhost',
         'port' => 1025,
         'smtp_auth' => false,
         'smtp_secure' => '',
         'username' => '',
         'password' => '',
-        'from' => 'gabriel.caboche@gmail.com', // REMPLACEZ par votre email vérifié dans Mailjet
+        'from' => 'gabriel.caboche@3wacademy.fr',
         'from_name' => 'Portfolio',
-        'admin' => 'gabcab1002@gmail.com', // REMPLACEZ par votre email admin
+        'admin' => 'gabriel.caboche@gmail.com',
         'mailjet' => [
             'api_key' => getenv('API_MAIL') ?: '',
             'secret_key' => getenv('SECRET_API_MAIL') ?: '',
@@ -66,6 +67,7 @@ return [
         '/admin/projects/delete' => ['controller' => 'Controllers\\AdminController', 'action' => 'deleteProject'],
         '/admin/request-access' => ['controller' => 'Controllers\\AuthController', 'action' => 'requestAccess'],
         '/admin/submit-request' => ['controller' => 'Controllers\\AuthController', 'action' => 'submitRequest'],
-        '/admin/confirm-access' => ['controller' => 'Controllers\\AuthController', 'action' => 'confirmAccess']
+        '/admin/confirm-access' => ['controller' => 'Controllers\\AuthController', 'action' => 'confirmAccess'],
+        '/admin/grant-access'  => ['controller' => 'Controllers\\AuthController', 'action' => 'grantAccess']
     ]
 ];
