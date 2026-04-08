@@ -7,7 +7,7 @@ return [
         'dbname' => getenv('POSTGRES_DATABASE'),
         'user' => getenv('POSTGRES_USER'),
         'password' => getenv('POSTGRES_PASSWORD'),
-        'port' => '6543'
+        'port' => '5432'
     ],
     'mail' => [
         'provider' => getenv('MAIL_PROVIDER') ?: 'mailhog', // 'mailhog', 'mailjet', or 'mailjet_smtp'
