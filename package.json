@@ -6,7 +6,7 @@
     "dev": "concurrently -k -n web,api \"npm:dev:web\" \"npm:dev:api\"",
     "dev:web": "vite web --config web/vite.config.ts --host 0.0.0.0",
     "dev:api": "node --env-file-if-exists=.env --import tsx --watch server/src/local.ts",
-    "build": "vite build web --config web/vite.config.ts",
+    "build": "vite build web --config web/vite.config.ts --output web",
     "typecheck": "tsc --noEmit -p web/tsconfig.json && tsc --noEmit -p server/tsconfig.json"
   },
   "dependencies": {

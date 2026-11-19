@@ -1,5 +1,5 @@
 
-
+DROP DATABASE IF EXISTS portfolio_ecole;
 CREATE TABLE IF NOT EXISTS portfolio_profile (
   id smallint PRIMARY KEY DEFAULT 1 CHECK (id = 1),
   hero_title text NOT NULL DEFAULT 'Du développement à la cybersécurité',
