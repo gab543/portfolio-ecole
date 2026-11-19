@@ -1,0 +1,29 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-color: var(--red) var(--ink);
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+}
+
+::selection {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+a {
+  color: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 5px;
+  }
+}
